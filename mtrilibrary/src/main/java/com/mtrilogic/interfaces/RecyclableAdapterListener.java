@@ -2,7 +2,7 @@ package com.mtrilogic.interfaces;
 
 import com.mtrilogic.adapters.RecyclableAdapter;
 
+@SuppressWarnings("unused")
 public interface RecyclableAdapterListener extends OnMakeToastListener{
-    @SuppressWarnings("unused")
     RecyclableAdapter getRecyclableAdapter();
 }

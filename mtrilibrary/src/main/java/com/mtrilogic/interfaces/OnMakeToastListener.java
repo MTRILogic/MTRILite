@@ -1,6 +1,6 @@
 package com.mtrilogic.interfaces;
 
+@SuppressWarnings("unused")
 public interface OnMakeToastListener{
-    @SuppressWarnings("unused")
     void onMakeToast(String line);
 }
