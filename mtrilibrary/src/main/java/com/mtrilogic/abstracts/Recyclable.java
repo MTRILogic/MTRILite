@@ -1,38 +1,31 @@
 package com.mtrilogic.abstracts;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.mtrilogic.interfaces.Bindable;
 import com.mtrilogic.interfaces.RecyclableAdapterListener;
 
 @SuppressWarnings("unused")
-public abstract class Recyclable extends RecyclerView.ViewHolder implements Bindable{
-    private RecyclableAdapterListener listener;
-    private Context context;
+public abstract class Recyclable extends RecyclerView.ViewHolder{
+    protected final RecyclableAdapterListener listener;
 
-    // +++++++++++++++++| PUBLIC ABSTRACT METHODS |++++++++++++++++++++++++++++
+// ++++++++++++++++| PUBLIC ABSTRACT METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    public abstract Recyclable getRecyclableHolder(ViewGroup parent);
+    public abstract void onBindHolder(Modelable modelable, int position);
 
-    // +++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++
+// ++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    public Recyclable(@NonNull View view, Context context, RecyclableAdapterListener listener){
-        super(view);
-        this.context = context;
+    public Recyclable(Context context, int resource, ViewGroup parent,
+                      RecyclableAdapterListener listener){
+        super(LayoutInflater.from(context).inflate(resource, parent, false));
         this.listener = listener;
     }
 
-    // +++++++++++++++++| PROTECTED METHODS |++++++++++++++++++++++++++++++++++
+// ++++++++++++++++| PROTECTED METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     protected Context getContext(){
-        return context;
-    }
-
-    protected RecyclableAdapterListener getListener(){
-        return listener;
+        return itemView.getContext();
     }
 }

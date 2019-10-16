@@ -1,63 +1,57 @@
 package com.mtrilogic.abstracts;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.os.Bundle;
 
 @SuppressWarnings({"unused","WeakerAccess"})
-public abstract class Paginable implements Parcelable{
-    private static int idx = 0;
-    private String tag;
-    private long itemId;
+public abstract class Paginable extends Modelable{
+    private static final String PAGE_TITLE = "pageTitle", TAG_NAME = "tagName";
+    private String pageTitle, tagName;
 
-    // +++++++++++++++++| PUBLIC ABSTRACTS METHODS |+++++++++++++++++++++++++++
+// +++++++++++++++++| PUBLIC CONSTRUCTORS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    public abstract String getPageTitle();
-    public abstract int getViewType();
+    public Paginable(){}
 
-    // +++++++++++++++++| PROTECTED ABSTRACTS METHODS |++++++++++++++++++++++++
-
-    protected abstract void onReadFromParcel(Parcel in);
-    protected abstract void onWriteToParcel(Parcel out);
-
-    // +++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++
-
-    public Paginable(){
-        itemId = idx++;
+    public Paginable(Bundle data){
+        super(data);
     }
 
-    // +++++++++++++++++| PROTECTED CONSTRUCTORS |+++++++++++++++++++++++++++++
-
-    protected Paginable(Parcel in){
-        onReadFromParcel(in);
-        tag = in.readString();
-        itemId = in.readLong();
+    public Paginable(String pageTitle, String tagName, long itemId, int viewType){
+        super(itemId, viewType,true);
+        this.pageTitle = pageTitle;
+        this.tagName = tagName;
     }
 
-    // +++++++++++++++++| PUBLIC METHODS |+++++++++++++++++++++++++++++++++++++
+// +++++++++++++++++| PUBLIC METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    public String getTag(){
-        return tag;
+    public String getPageTitle(){
+        return pageTitle;
     }
 
-    public void setTag(String tag){
-        this.tag = tag;
+    public void setPageTitle(String pageTitle){
+        this.pageTitle = pageTitle;
     }
 
-    public long getItemId(){
-        return itemId;
+    public String getTagName(){
+        return tagName;
     }
 
-    // +++++++++++++++++| OVERRIDE PUBLIC METHODS |++++++++++++++++++++++++++++
+    public void setTagName(String tagName){
+        this.tagName = tagName;
+    }
+
+// +++++++++++++++++| PROTECTED OVERRIDE METHODS |++++++++++++++++++++++++++++
 
     @Override
-    public void writeToParcel(Parcel dest, int flags){
-        onWriteToParcel(dest);
-        dest.writeString(tag);
-        dest.writeLong(itemId);
+    protected void onRestoreFromData(Bundle data) {
+        pageTitle = data.getString(PAGE_TITLE);
+        tagName = data.getString(TAG_NAME);
+        super.onRestoreFromData(data);
     }
 
     @Override
-    public int describeContents(){
-        return 0;
+    protected void onSaveToData(Bundle data) {
+        data.putString(PAGE_TITLE, pageTitle);
+        data.putString(TAG_NAME, tagName);
+        super.onSaveToData(data);
     }
 }

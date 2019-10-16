@@ -5,21 +5,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mtrilogic.interfaces.InflatableAdapterListener;
+import com.mtrilogic.interfaces.ExpandableAdapterListener;
 
 @SuppressWarnings({"unused","WeakerAccess"})
-public abstract class Inflatable {
-    protected final InflatableAdapterListener listener;
+public abstract class ExpandableChild{
+    protected final ExpandableAdapterListener listener;
     protected final View itemView;
 
 // ++++++++++++++++| PUBLIC ABSTRACT METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    public abstract void onBindHolder(Modelable modelable, int position);
+    public abstract void onBindHolder(Modelable modelable, int groupPosition, int childPosition,
+                                      boolean lastChild);
 
-// ++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++| PROTECTED CONSTRUCTORS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    public Inflatable(Context context, int resource, ViewGroup parent,
-                      InflatableAdapterListener listener){
+    public ExpandableChild(Context context, int resource, ViewGroup parent,
+                           ExpandableAdapterListener listener){
         itemView = LayoutInflater.from(context).inflate(resource, parent, false);
         this.listener = listener;
     }

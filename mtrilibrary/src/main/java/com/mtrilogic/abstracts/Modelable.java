@@ -1,79 +1,69 @@
 package com.mtrilogic.abstracts;
 
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-@SuppressWarnings({"unused","WeakerAccess"})
+@SuppressWarnings({"unused"})
 public abstract class Modelable implements Parcelable{
-    private static int idx = 0;
-    private int groupPosition;
-    private int childPosition;
-    private int position;
+    private static final String ITEM_ID = "itemId", VIEW_TYPE = "viewType", ENABLED = "enabled";
     private long itemId;
+    private int viewType;
+    private boolean enabled;
 
-    // +++++++++++++++++| PUBLIC ABSTRACT METHODS |++++++++++++++++++++++++++++
+// +++++++++++++++++| PUBLIC ABSTRACT METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    public abstract int getViewType();
-    public abstract boolean isEnabled();
+    public Modelable(){}
 
-    // +++++++++++++++++| PROTECTED ABSTRACT METHODS |+++++++++++++++++++++++++
-
-    protected abstract void onReadFromParcel(Parcel in);
-    protected abstract void onWriteToParcel(Parcel out);
-
-    // +++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++
-
-    public Modelable(){
-        itemId = idx++;
+    public Modelable(Bundle data){
+        onRestoreFromData(data);
     }
 
-    // +++++++++++++++++| PROTECTED CONSTRUCTORS |+++++++++++++++++++++++++++++
-
-    public Modelable(Parcel in){
-        onReadFromParcel(in);
-        itemId = in.readLong();
+    public Modelable(long itemId, int viewType, boolean enabled){
+        this.itemId = itemId;
+        this.viewType = viewType;
+        this.enabled = enabled;
     }
 
-    // +++++++++++++++++| PUBLIC METHODS |+++++++++++++++++++++++++++++++++++++
+// +++++++++++++++++| PUBLIC METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     public long getItemId(){
         return itemId;
     }
 
-    public int getGroupPosition(){
-        return groupPosition;
+    public int getViewType(){
+        return viewType;
     }
 
-    public void setGroupPosition(int groupPosition){
-        this.groupPosition = groupPosition;
+    public boolean isEnabled(){
+        return enabled;
     }
 
-    public int getChildPosition(){
-        return childPosition;
+// ++++++++++++++++| PROTECTED METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    protected void onRestoreFromData(Bundle data){
+        itemId = data.getLong(ITEM_ID);
+        viewType = data.getInt(VIEW_TYPE);
+        enabled = data.getBoolean(ENABLED);
     }
 
-    public void setChildPosition(int childPosition){
-        this.childPosition = childPosition;
+    protected void onSaveToData(Bundle data){
+        data.putLong(ITEM_ID, itemId);
+        data.putInt(VIEW_TYPE, viewType);
+        data.putBoolean(ENABLED, enabled);
     }
 
-    public int getPosition(){
-        return position;
-    }
-
-    public void setPosition(int position){
-        this.position = position;
-    }
-
-    // +++++++++++++++++| OVERRIDE PUBLIC METHODS |++++++++++++++++++++++++++++
+// +++++++++++++++++| OVERRIDE PUBLIC METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     @Override
     public void writeToParcel(Parcel dest, int flags){
-        onWriteToParcel(dest);
-        dest.writeLong(itemId);
+        Bundle data = new Bundle();
+        onSaveToData(data);
+        dest.writeBundle(data);
     }
 
     @Override
-    public int describeContents(){
+    public final int describeContents(){
         return 0;
     }
 }
