@@ -5,7 +5,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 @SuppressWarnings({"unused","WeakerAccess"})
-public abstract class ModelableCreator<M extends Modelable> implements Parcelable.ClassLoaderCreator<M> {
+public abstract class ModelableCreator<M extends Modelable> implements Parcelable.ClassLoaderCreator<M>{
+
     public abstract M getParcelable(Bundle data);
 
     public abstract M[] getParcelableArray(int size);

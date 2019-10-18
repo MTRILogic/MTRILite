@@ -12,14 +12,13 @@ public abstract class ExpandableGroup{
     protected final ExpandableAdapterListener listener;
     protected final View itemView;
 
-// ++++++++++++++++| PUBLIC ABSTRACT METHODS |+++++++++++++++++++++++++++++++++
+// ++++++++++++++++| PUBLIC ABSTRACT METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     public abstract void onBindHolder(Modelable modelable, int groupPosition, boolean expanded);
 
-// ++++++++++++++++| PROTECTED CONSTRUCTORS |++++++++++++++++++++++++++++++++++
+// ++++++++++++++++| PROTECTED CONSTRUCTORS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    public ExpandableGroup(Context context, int resource, ViewGroup parent,
-                           ExpandableAdapterListener listener){
+    public ExpandableGroup(Context context, int resource, ViewGroup parent, ExpandableAdapterListener listener){
         itemView = LayoutInflater.from(context).inflate(resource, parent, false);
         this.listener = listener;
     }
@@ -30,7 +29,7 @@ public abstract class ExpandableGroup{
         return itemView;
     }
 
-    // ++++++++++++++++| PROTECTED METHODS |+++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++| PROTECTED METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     protected Context getContext(){
         return itemView.getContext();

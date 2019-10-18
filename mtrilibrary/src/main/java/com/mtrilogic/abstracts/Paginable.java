@@ -3,11 +3,11 @@ package com.mtrilogic.abstracts;
 import android.os.Bundle;
 
 @SuppressWarnings({"unused","WeakerAccess"})
-public abstract class Paginable extends Modelable{
+public abstract class Paginable extends Modelable {
     private static final String PAGE_TITLE = "pageTitle", TAG_NAME = "tagName";
     private String pageTitle, tagName;
 
-// +++++++++++++++++| PUBLIC CONSTRUCTORS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     public Paginable(){}
 
@@ -21,7 +21,7 @@ public abstract class Paginable extends Modelable{
         this.tagName = tagName;
     }
 
-// +++++++++++++++++| PUBLIC METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++| PUBLIC METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     public String getPageTitle(){
         return pageTitle;
@@ -39,7 +39,7 @@ public abstract class Paginable extends Modelable{
         this.tagName = tagName;
     }
 
-// +++++++++++++++++| PROTECTED OVERRIDE METHODS |++++++++++++++++++++++++++++
+// ++++++++++++++++| PROTECTED OVERRIDE METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++
 
     @Override
     protected void onRestoreFromData(Bundle data) {

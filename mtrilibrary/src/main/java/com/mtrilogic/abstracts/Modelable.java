@@ -5,13 +5,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 @SuppressWarnings({"unused"})
-public abstract class Modelable implements Parcelable{
+public abstract class Modelable implements Parcelable {
     private static final String ITEM_ID = "itemId", VIEW_TYPE = "viewType", ENABLED = "enabled";
     private long itemId;
     private int viewType;
     private boolean enabled;
 
-// +++++++++++++++++| PUBLIC ABSTRACT METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     public Modelable(){}
 
@@ -25,7 +25,7 @@ public abstract class Modelable implements Parcelable{
         this.enabled = enabled;
     }
 
-// +++++++++++++++++| PUBLIC METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++| PUBLIC METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     public long getItemId(){
         return itemId;
@@ -53,7 +53,7 @@ public abstract class Modelable implements Parcelable{
         data.putBoolean(ENABLED, enabled);
     }
 
-// +++++++++++++++++| OVERRIDE PUBLIC METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++| PUBLIC OVERRIDE METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     @Override
     public void writeToParcel(Parcel dest, int flags){
