@@ -27,7 +27,8 @@ public class ExpandableAdapter extends BaseExpandableListAdapter{
 
 // ++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    public ExpandableAdapter(ExpandableListener listener, Listable<Modelable> groupListable, Mapable<Modelable> childMapable, int groupTypeCount, int childTypeCount){
+    public ExpandableAdapter(ExpandableListener listener, Listable<Modelable> groupListable,
+                             Mapable<Modelable> childMapable, int groupTypeCount, int childTypeCount){
         this.listener = listener;
         this.groupListable = groupListable;
         this.childMapable = childMapable;
@@ -101,7 +102,8 @@ public class ExpandableAdapter extends BaseExpandableListAdapter{
      * @param childListable The child modelable list
      * @return True if group modelable was added
      */
-    public final boolean appendGroupModelable(@NonNull Modelable groupModelable, @NonNull Listable<Modelable> childListable){
+    public final boolean appendGroupModelable(@NonNull Modelable groupModelable,
+                                              @NonNull Listable<Modelable> childListable){
         if(!groupListable.containsModelable(groupModelable) && groupListable.appendModelable(groupModelable)){
             lastListable = childMapable.putListable(groupModelable, childListable);
             return true;
@@ -109,7 +111,8 @@ public class ExpandableAdapter extends BaseExpandableListAdapter{
         return false;
     }
 
-    public final boolean appendChildModelableList(Modelable groupModelable, @NonNull ArrayList<Modelable> childModelableList){
+    public final boolean appendChildModelableList(Modelable groupModelable,
+                                                  @NonNull ArrayList<Modelable> childModelableList){
         int count = 0;
         if(childMapable.containsModelableKey(groupModelable)){
             Listable<Modelable> childListable = childMapable.getListable(groupModelable);
@@ -150,7 +153,8 @@ public class ExpandableAdapter extends BaseExpandableListAdapter{
         return count > 0;
     }
 
-    public final boolean insertGroupModelable(int groupPosition, @NonNull Modelable groupModelable, @NonNull Listable<Modelable> childListable){
+    public final boolean insertGroupModelable(int groupPosition, @NonNull Modelable groupModelable,
+                                              @NonNull Listable<Modelable> childListable){
         if(!groupListable.containsModelable(groupModelable) && groupListable.insertModelable(groupPosition, groupModelable)){
             lastListable = childMapable.putListable(groupModelable, childListable);
             return true;
@@ -158,12 +162,14 @@ public class ExpandableAdapter extends BaseExpandableListAdapter{
         return false;
     }
 
-    public final boolean insertChildModelableList(Modelable groupModelable, int childPosition, ArrayList<Modelable> childModelableList){
+    public final boolean insertChildModelableList(Modelable groupModelable, int childPosition,
+                                                  ArrayList<Modelable> childModelableList){
         int count = 0;
         if(childMapable.containsModelableKey(groupModelable)){
             Listable<Modelable> childListable = childMapable.getListable(groupModelable);
             for(Modelable childModelable : childModelableList){
-                if(!childListable.containsModelable(childModelable) && childListable.insertModelable(childPosition, childModelable)){
+                if(!childListable.containsModelable(childModelable) &&
+                        childListable.insertModelable(childPosition, childModelable)){
                     count++;
                 }
             }
@@ -174,7 +180,8 @@ public class ExpandableAdapter extends BaseExpandableListAdapter{
     public final boolean insertChildModelable(Modelable groupModelable, int childPosition, Modelable childModelable){
         if(childMapable.containsModelableKey(groupModelable)){
             Listable<Modelable> childListable = childMapable.getListable(groupModelable);
-            return !childListable.containsModelable(childModelable) && childListable.insertModelable(childPosition, childModelable);
+            return !childListable.containsModelable(childModelable) &&
+                    childListable.insertModelable(childPosition, childModelable);
         }
         return false;
     }
@@ -185,11 +192,11 @@ public class ExpandableAdapter extends BaseExpandableListAdapter{
      * Returns the current group modelable list
      * @return The current group modelable list
      */
-    public Listable getGroupListable(){
+    public Listable<Modelable> getGroupListable(){
         return groupListable;
     }
 
-    public Listable getChildListable(Modelable groupModelable){
+    public Listable<Modelable> getChildListable(Modelable groupModelable){
         return childMapable.containsModelableKey(groupModelable) ? childMapable.getListable(groupModelable) : null;
     }
 
@@ -197,7 +204,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter{
      * Returns the current child modelable map
      * @return The current child modelable map
      */
-    public Mapable getChildMapable(){
+    public Mapable<Modelable> getChildMapable(){
         return childMapable;
     }
 
@@ -254,8 +261,10 @@ public class ExpandableAdapter extends BaseExpandableListAdapter{
      * @param childModelable The childModelable's replacement to set
      * @return The Replaced child modelable or null
      */
-    public Modelable setChildModelable(Modelable groupModelable, int childPosition, @NonNull Modelable childModelable){
-        return childMapable.containsModelableKey(groupModelable) ? childMapable.getListable(childModelable).setModelable(childPosition, childModelable) : null;
+    public Modelable setChildModelable(Modelable groupModelable, int childPosition,
+                                       @NonNull Modelable childModelable){
+        return childMapable.containsModelableKey(groupModelable) ?
+                childMapable.getListable(childModelable).setModelable(childPosition, childModelable) : null;
     }
 
     // DELETE =================================================================

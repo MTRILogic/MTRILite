@@ -15,7 +15,8 @@ import com.mtrilogic.mtrilibrary.R;
 import java.util.ArrayList;
 
 @SuppressWarnings("unused")
-public abstract class RecyclableFragment<P extends ListablePage> extends Fragmentable<P> implements RecyclableListener, RecyclableAdapterListener {
+public abstract class RecyclableFragment<P extends ListablePage> extends Fragmentable<P>
+        implements RecyclableListener, RecyclableAdapterListener {
     private static final String TAG = "RecyclableFragmentTAG";
     private RecyclableAdapter adapter;
 

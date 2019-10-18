@@ -18,7 +18,8 @@ import com.mtrilogic.interfaces.ExpandableListener;
 import com.mtrilogic.mtrilibrary.R;
 
 @SuppressWarnings("unused")
-public abstract class ExpandableFragment<P extends MapablePage> extends Fragmentable<P> implements ExpandableListener, ExpandableAdapterListener {
+public abstract class ExpandableFragment<P extends MapablePage> extends Fragmentable<P> implements
+        ExpandableListener, ExpandableAdapterListener {
     private static final String TAG = "ExpandableFragment", INDEX = "index", TOP = "top";
     private ExpandableAdapter adapter;
     private ExpandableListView lvwItems;
@@ -28,7 +29,8 @@ public abstract class ExpandableFragment<P extends MapablePage> extends Fragment
     protected void init(View view, int groupTypeCount, int childTypeCount, P page){
         Listable<Modelable> groupListable = page.getGroupListable();
         Mapable<Modelable> childMapable = page.getChildMapable();
-        adapter = new ExpandableAdapter(this, groupListable, childMapable, groupTypeCount, childTypeCount);
+        adapter = new ExpandableAdapter(this, groupListable, childMapable,
+                groupTypeCount, childTypeCount);
         lvwItems = (ExpandableListView) view.findViewById(R.id.lvw_items);
         lvwItems.setAdapter(adapter);
     }

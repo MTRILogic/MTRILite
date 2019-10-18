@@ -19,7 +19,9 @@ public abstract class Fragmentable<P extends Paginable> extends Fragment impleme
     private P page;
     private int position;
 
-    protected abstract View onCreateViewFragment(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState, P page, int position);
+    protected abstract View onCreateViewFragment(@NonNull LayoutInflater inflater,
+                                                 @Nullable ViewGroup container,
+                                                 @Nullable Bundle savedInstanceState, P page, int position);
     protected abstract void onNewPosition(int position);
 
 // ++++++++++++++++| PUBLIC STATIC METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -52,7 +54,8 @@ public abstract class Fragmentable<P extends Paginable> extends Fragment impleme
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         if (page != null){
             position = listener.getAdapter().getPaginablePosition(page);
             return onCreateViewFragment(inflater, container, savedInstanceState, page, position);
