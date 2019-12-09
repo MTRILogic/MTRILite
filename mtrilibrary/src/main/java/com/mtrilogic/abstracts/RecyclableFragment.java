@@ -1,6 +1,5 @@
 package com.mtrilogic.abstracts;
 
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -11,7 +10,7 @@ import com.mtrilogic.mtrilibrary.R;
 
 import java.util.ArrayList;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused"})
 public abstract class RecyclableFragment<P extends ListablePage> extends Fragmentable<P>
         implements RecyclableListener, RecyclableAdapterListener {
     protected RecyclableAdapter adapter;
@@ -21,11 +20,11 @@ public abstract class RecyclableFragment<P extends ListablePage> extends Fragmen
 
 // ****************| PROTECTED METHODS |************************************************************
 
-    protected void initRecyclable(View view){
+    protected void initRecyclable(View view, RecyclerView.LayoutManager layoutManager){
         ArrayList<Modelable> modelables = page.getModelableList();
         adapter = new RecyclableAdapter(this, modelables);
         lvwItems = (RecyclerView) view.findViewById(R.id.lvw_items);
-        lvwItems.setLayoutManager(new LinearLayoutManager(getContext()));
+        lvwItems.setLayoutManager(layoutManager);
         lvwItems.setAdapter(adapter);
         onRecyclableCreated();
     }
