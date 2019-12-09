@@ -23,7 +23,7 @@ public class Statable extends ViewModel {
         return listableLiveData;
     }
 
-    public void update(){
+    public void setUpdate(){
         listableLiveData.setValue(listable);
     }
 

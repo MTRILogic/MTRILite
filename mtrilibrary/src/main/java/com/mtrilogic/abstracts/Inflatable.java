@@ -1,27 +1,43 @@
 package com.mtrilogic.abstracts;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mtrilogic.adapters.InflatableAdapter;
 import com.mtrilogic.interfaces.InflatableAdapterListener;
+import com.mtrilogic.interfaces.OnMakeToastListener;
+import com.mtrilogic.views.InflatableView;
 
 @SuppressWarnings({"unused","WeakerAccess"})
-public abstract class Inflatable {
-    protected final InflatableAdapterListener listener;
+public abstract class Inflatable<M extends Modelable> extends LiveData<M> implements Observer<M> {
+    protected final OnMakeToastListener listener;
     protected final View itemView;
+    protected InflatableAdapter adapter;
+    protected InflatableView lvwItems;
+    protected Context context;
+    protected int position;
+    protected M model;
 
-// ++++++++++++++++| PUBLIC ABSTRACT METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// ++++++++++++++++| PROTECTED ABSTRACT METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    public abstract void onBindHolder(Modelable modelable, int position);
+    protected abstract M getModel(Modelable modelable);
+
+    protected abstract void onBindHolder();
 
 // ++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    public Inflatable(Context context, int resource, ViewGroup parent,
-                      InflatableAdapterListener listener){
+    public Inflatable(@NonNull Context context, int resource, @NonNull ViewGroup parent,
+                      @NonNull InflatableAdapterListener listener){
         itemView = LayoutInflater.from(context).inflate(resource, parent, false);
+        this.context = context;
         this.listener = listener;
+        adapter = listener.getInflatableAdapter();
+        lvwItems = listener.getInflatableView();
     }
 
 // ++++++++++++++++| PUBLIC METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -30,9 +46,19 @@ public abstract class Inflatable {
         return itemView;
     }
 
+    public void bindHolder(Modelable modelable, int position){
+        model = getModel(modelable);
+        this.position = position;
+        onBindHolder();
+    }
+
 // ++++++++++++++++| PROTECTED METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    protected Context getContext(){
-        return itemView.getContext();
+    protected void autoDelete(){
+        if (adapter != null){
+            if (adapter.removeModelable(model)){
+                adapter.notifyDataSetChanged();
+            }
+        }
     }
 }

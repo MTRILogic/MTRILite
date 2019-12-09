@@ -1,16 +1,14 @@
-package com.mtrilogic.abstracts.pages;
+package com.mtrilogic.abstracts;
 
 import android.os.Bundle;
 
-import com.mtrilogic.abstracts.Modelable;
-import com.mtrilogic.abstracts.Paginable;
 import com.mtrilogic.classes.Listable;
 import com.mtrilogic.classes.Mapable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-@SuppressWarnings({"unused"})
+@SuppressWarnings({"unused","WeakerAccess"})
 public abstract class MapablePage extends Paginable {
     private static final String LIST = "list", IDX = "idx";
     private Listable<Modelable> groupListable;

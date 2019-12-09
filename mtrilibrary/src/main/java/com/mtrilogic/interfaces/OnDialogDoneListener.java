@@ -4,5 +4,5 @@ import android.os.Bundle;
 
 @SuppressWarnings("unused")
 public interface OnDialogDoneListener extends OnMakeToastListener{
-    void onDialogDone(Bundle data);
+    void onDialogDone(Bundle bundle);
 }
