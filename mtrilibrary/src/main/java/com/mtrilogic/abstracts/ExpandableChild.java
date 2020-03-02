@@ -3,22 +3,22 @@ package com.mtrilogic.abstracts;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.viewbinding.ViewBinding;
+import android.view.ViewGroup;
 
 import com.mtrilogic.adapters.ExpandableAdapter;
 import com.mtrilogic.interfaces.ExpandableAdapterListener;
 import com.mtrilogic.views.ExpandableView;
 
 @SuppressWarnings({"unused","WeakerAccess"})
-public abstract class ExpandableChild <M extends Modelable, VB extends ViewBinding> extends LiveData<M> implements Observer<M> {
+public abstract class ExpandableChild <M extends Modelable> extends LiveData<M> implements Observer<M> {
 
     protected final ExpandableAdapterListener listener;
     protected final View itemView;
     protected int groupPosition;
     protected int childPosition;
     protected boolean lastChild;
-    protected VB binding;
     protected M model;
 
     // ================< PROTECTED ABSTRACT METHODS >===============================================
@@ -27,10 +27,15 @@ public abstract class ExpandableChild <M extends Modelable, VB extends ViewBindi
 
     // ================< PROTECTED CONSTRUCTORS >===================================================
 
-    public ExpandableChild(@NonNull VB binding, @NonNull ExpandableAdapterListener listener){
-        itemView = binding.getRoot();
+    public ExpandableChild(@NonNull LayoutInflater inflater, int resocurce, @NonNull ViewGroup parent,
+                           @NonNull ExpandableAdapterListener listener){
+        itemView = inflater.inflate(resocurce, parent, false);
         this.listener = listener;
-        this.binding = binding;
+    }
+
+    public ExpandableChild(@NonNull View itemView, @NonNull ExpandableAdapterListener listener){
+        this.itemView = itemView;
+        this.listener = listener;
     }
 
     // ================< PUBLIC METHODS >===========================================================
