@@ -9,7 +9,10 @@ import android.widget.ListView;
 import com.mtrilogic.classes.Base;
 
 public class InflatableView extends ListView {
+
     private static final String INDEX = "index", TOP = "top";
+
+    // ================< PUBLIC CONSTRUCTORS >======================================================
 
     public InflatableView(Context context) {
         super(context);
@@ -23,7 +26,9 @@ public class InflatableView extends ListView {
         super(context, attrs, defStyleAttr);
     }
 
-    public void restoreFromState(Bundle state){
+    // ================< PUBLIC METHODS >===========================================================
+
+    public final void restoreFromState(Bundle state){
         int index = state.getInt(INDEX, Base.INVALID_POSITION);
         if (index == 0) {
             int top = state.getInt(TOP);
@@ -31,7 +36,7 @@ public class InflatableView extends ListView {
         }
     }
 
-    public void saveToState(Bundle state){
+    public final void saveToState(Bundle state){
         int index = getFirstVisiblePosition();
         if (index == 0){
             View view = getChildAt(0);

@@ -1,5 +1,8 @@
 package com.mtrilogic.adapters;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -13,103 +16,109 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"unused","WeakerAccess"})
 public class InflatableAdapter extends BaseAdapter{
-    private static final String TAG = "InflatableAdapter";
+
+    private LayoutInflater inflater;
     private InflatableListener listener;
     private ArrayList<Modelable> modelableList;
     private int typeCount;
     private boolean stableIds;
 
-// ++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // ================< PUBLIC CONSTRUCTORS >======================================================
 
-    public InflatableAdapter(InflatableListener listener, ArrayList<Modelable> modelableList,
-                             int typeCount){
+    public InflatableAdapter(@NonNull Context context, @NonNull InflatableListener listener,
+                             @NonNull ArrayList<Modelable> modelableList, int typeCount){
+        inflater = LayoutInflater.from(context);
         this.listener = listener;
         this.modelableList = modelableList;
         setTypeCount(typeCount);
         stableIds = true;
     }
 
-// ++++++++++++++++| PUBLIC METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // ================< PUBLIC METHODS >===========================================================
 
-    public void setTypeCount(int typeCount){
+    public final void setTypeCount(int typeCount){
         typeCount = typeCount > 0 ? typeCount : 1;
         this.typeCount = typeCount;
     }
 
-    public void setStableIds(boolean stableIds){
+    public final void setStableIds(boolean stableIds){
         this.stableIds = stableIds;
     }
 
-    public int getModelablePosition(Modelable modelable){
+    public final int getModelablePosition(@NonNull Modelable modelable){
         return modelableList.indexOf(modelable);
     }
 
-    private Modelable[] getModelableArray(){
+    public final Modelable[] getModelableArray(){
         return modelableList.toArray(new Modelable[getCount()]);
     }
 
-    public ArrayList<Modelable> getModelableList(){
+    public final ArrayList<Modelable> getModelableList(){
         return modelableList;
     }
 
-    public void setModelableList(ArrayList<Modelable> modelableList){
+    public final void setModelableList(@NonNull ArrayList<Modelable> modelableList){
         this.modelableList = modelableList;
     }
 
-    public boolean addModelableList(ArrayList<Modelable> modelableList){
+    public final boolean addModelableList(@NonNull ArrayList<Modelable> modelableList){
         return this.modelableList.addAll(modelableList);
     }
 
-    public boolean insertModelableList(int position, ArrayList<Modelable> modelableList){
+    public final boolean insertModelableList(int position, @NonNull ArrayList<Modelable> modelableList){
         return isValidPosition(position) && this.modelableList.addAll(position, modelableList);
     }
 
-    public boolean removeModelableList(ArrayList<Modelable> modelableList){
+    public final boolean removeModelableList(@NonNull ArrayList<Modelable> modelableList){
         return this.modelableList.removeAll(modelableList);
     }
 
-    public boolean retainModelableList(ArrayList<Modelable> modelableList){
+    public final boolean retainModelableList(@NonNull ArrayList<Modelable> modelableList){
         return this.modelableList.retainAll(modelableList);
     }
 
-    public Modelable getModelable(int position){
+    public final Modelable getModelable(int position){
         return isValidPosition(position) ? modelableList.get(position) : null;
     }
 
-    public Modelable setModelable(int position, Modelable modelable){
+    public final Modelable setModelable(int position, @NonNull Modelable modelable){
         return isValidPosition(position) ? modelableList.set(position, modelable) : null;
     }
 
-    public boolean addModelable(Modelable modelable){
+    public final boolean addModelable(@NonNull Modelable modelable){
         return modelableList.add(modelable);
     }
 
-    public void insertModelable(int position, Modelable modelable){
+    public final void insertModelable(int position, @NonNull Modelable modelable){
         if(isValidPosition(position)){
             modelableList.add(position, modelable);
         }
     }
 
-    public boolean removeModelable(Modelable modelable){
+    public final boolean removeModelable(@NonNull Modelable modelable){
         return modelableList.remove(modelable);
     }
 
-    public void clearModelableList(){
+    public final void clearModelableList(){
         modelableList.clear();
     }
 
-// +++++++++++++++++| PUBLIC OVERRIDE METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // ================< PUBLIC OVERRIDE METHODS >==================================================
 
     @Override
     public int getCount(){
         return modelableList.size();
     }
 
+    /**
+     * you should not use this method to get a modelable,
+     * you should use getModelable(int) method instead.
+     * @param position the modelable position.
+     * @return the modelable at position.
+     */
     @Override
     public Modelable getItem(int position){
         return modelableList.get(position);
-        // you should not use this method to get a modelable,
-        // instead you should use getModelable(int) method
     }
 
     @Override
@@ -125,12 +134,22 @@ public class InflatableAdapter extends BaseAdapter{
             inflatable = (Inflatable)convertView.getTag();
         }else{
             int viewType = modelable.getViewType();
-            inflatable = listener.getInflatable(viewType, parent);
+            inflatable = listener.getInflatable(viewType, inflater, parent);
             convertView = inflatable.getItemView();
             convertView.setTag(inflatable);
         }
-        inflatable.bindHolder(modelable, position);
+        inflatable.bindModel(modelable, position);
         return convertView;
+    }
+
+    @Override
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
+        return getView(position, convertView, parent);
+    }
+
+    @Override
+    public boolean areAllItemsEnabled() {
+        return false;
     }
 
     @Override
@@ -153,7 +172,7 @@ public class InflatableAdapter extends BaseAdapter{
         return stableIds;
     }
 
-// ++++++++++++++++| PRIVATE METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // ================< PRIVATE METHODS >==========================================================
 
     private boolean isValidPosition(int position){
         return position > Base.INVALID_POSITION && position < getCount();

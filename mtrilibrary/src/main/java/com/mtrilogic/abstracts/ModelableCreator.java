@@ -3,13 +3,18 @@ package com.mtrilogic.abstracts;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 @SuppressWarnings({"unused","WeakerAccess"})
-public abstract class ModelableCreator<M extends Modelable> implements Parcelable.ClassLoaderCreator<M>{
+public abstract class ModelableCreator<M extends Modelable>
+        implements Parcelable.ClassLoaderCreator<M>{
 
-    public abstract M getParcelable(Bundle data);
+    // ================< PUBLIC ABSTRACT METHODS >==================================================
 
+    public abstract M getParcelable(@NonNull Bundle data);
     public abstract M[] getParcelableArray(int size);
+
+    // ================< PUBLIC FINAL OVERRIDE METHODS >============================================
 
     @Override
     public final M createFromParcel(Parcel src, ClassLoader loader){
@@ -26,9 +31,15 @@ public abstract class ModelableCreator<M extends Modelable> implements Parcelabl
         return getParcelableArray(size);
     }
 
+    // ================< PRIVATE METHODS >==========================================================
+
+    @NonNull
     private M getParcelable(Parcel source, ClassLoader loader){
-        Bundle data;
-        if (source == null || loader == null || (data = source.readBundle(loader)) == null){
+        Bundle data = null;
+        if (source != null && loader != null){
+            data = source.readBundle(loader);
+        }
+        if (data == null){
             data = new Bundle();
         }
         return getParcelable(data);

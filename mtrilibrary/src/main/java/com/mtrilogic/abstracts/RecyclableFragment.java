@@ -1,38 +1,43 @@
 package com.mtrilogic.abstracts;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import android.viewbinding.ViewBinding;
 
 import com.mtrilogic.adapters.RecyclableAdapter;
 import com.mtrilogic.interfaces.RecyclableAdapterListener;
 import com.mtrilogic.interfaces.RecyclableListener;
-import com.mtrilogic.mtrilibrary.R;
 
 import java.util.ArrayList;
 
 @SuppressWarnings({"unused"})
-public abstract class RecyclableFragment<P extends ListablePage> extends Fragmentable<P>
-        implements RecyclableListener, RecyclableAdapterListener {
+public abstract class RecyclableFragment<P extends ListPaginable<Modelable>, VB extends ViewBinding>
+        extends Fragmentable<P, VB> implements RecyclableListener, RecyclableAdapterListener {
+
     protected RecyclableAdapter adapter;
     protected RecyclerView lvwItems;
 
-    protected abstract void onRecyclableCreated();
+    protected abstract RecyclerView.LayoutManager getLayoutManager(Context context);
 
-// ****************| PROTECTED METHODS |************************************************************
+    // ================< PROTECTED METHODS >========================================================
 
-    protected void initRecyclable(View view, RecyclerView.LayoutManager layoutManager){
-        ArrayList<Modelable> modelables = page.getModelableList();
-        adapter = new RecyclableAdapter(this, modelables);
-        lvwItems = (RecyclerView) view.findViewById(R.id.lvw_items);
-        lvwItems.setLayoutManager(layoutManager);
-        lvwItems.setAdapter(adapter);
-        onRecyclableCreated();
+    protected void bindRecyclable(@NonNull RecyclerView lvwItems){
+        this.lvwItems = lvwItems;
+        Context context = getContext();
+        if (context != null) {
+            ArrayList<Modelable> modelables = page.getListable().getModelableList();
+            adapter = new RecyclableAdapter(context, this, modelables);
+            RecyclerView.LayoutManager manager = getLayoutManager(context);
+            lvwItems.setLayoutManager(manager);
+            lvwItems.setAdapter(adapter);
+        }
     }
 
-// ++++++++++++++++| PUBLIC OVERRIDE METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // ================< PUBLIC OVERRIDE METHODS >==================================================
 
     @Override
-    protected void onNewPosition() {
+    public void onNewPosition(int position) {
 
     }
 

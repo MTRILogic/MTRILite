@@ -2,67 +2,59 @@ package com.mtrilogic.abstracts;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
-import android.content.Context;
 import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.viewbinding.ViewBinding;
 
 import com.mtrilogic.adapters.ExpandableAdapter;
 import com.mtrilogic.interfaces.ExpandableAdapterListener;
-import com.mtrilogic.interfaces.OnMakeToastListener;
 import com.mtrilogic.views.ExpandableView;
 
 @SuppressWarnings({"unused","WeakerAccess"})
-public abstract class ExpandableChild <M extends Modelable> extends LiveData<M> implements Observer<M> {
-    protected final OnMakeToastListener listener;
+public abstract class ExpandableChild <M extends Modelable, VB extends ViewBinding> extends LiveData<M> implements Observer<M> {
+
+    protected final ExpandableAdapterListener listener;
     protected final View itemView;
-    protected ExpandableAdapter adapter;
-    protected ExpandableView lvwItems;
-    protected Context context;
     protected int groupPosition;
     protected int childPosition;
     protected boolean lastChild;
+    protected VB binding;
     protected M model;
 
-// ++++++++++++++++| PUBLIC ABSTRACT METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // ================< PROTECTED ABSTRACT METHODS >===============================================
 
-    protected abstract M getModel(Modelable modelable);
+    protected abstract void onBindHolder(@NonNull Modelable modelable);
 
-    protected abstract void onBindHolder();
+    // ================< PROTECTED CONSTRUCTORS >===================================================
 
-// ++++++++++++++++| PROTECTED CONSTRUCTORS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-    public ExpandableChild(@NonNull Context context, int resource, @NonNull ViewGroup parent,
-                           @NonNull ExpandableAdapterListener listener){
-        itemView = LayoutInflater.from(context).inflate(resource, parent, false);
-        this.context = context;
+    public ExpandableChild(@NonNull VB binding, @NonNull ExpandableAdapterListener listener){
+        itemView = binding.getRoot();
         this.listener = listener;
-        adapter = listener.getExpandableAdapter();
-        lvwItems = listener.getExpandableView();
+        this.binding = binding;
     }
 
-// ++++++++++++++++| PUBLIC METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // ================< PUBLIC METHODS >===========================================================
 
-    public View getItemView(){
+    public final View getItemView(){
         return itemView;
     }
 
-    public void bindHolder(Modelable modelable, int groupPosition, int childPosition, boolean lastChild){
-        model = getModel(modelable);
+    public final void bindModel(@NonNull Modelable modelable, int groupPosition, int childPosition, boolean lastChild){
         this.groupPosition = groupPosition;
         this.childPosition = childPosition;
         this.lastChild = lastChild;
-        onBindHolder();
+        onBindHolder(modelable);
     }
 
-// ++++++++++++++++| PROTECTED METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // ================< PROTECTED METHODS >========================================================
 
-    protected void autoDelete(){
+    protected final void autoDelete(){
+        ExpandableAdapter adapter = listener.getExpandableAdapter();
         if (adapter != null){
             if (adapter.deleteChildModelable(adapter.getGroupModelable(groupPosition), model)){
                 adapter.notifyDataSetChanged();
                 if (adapter.getChildrenCount(groupPosition) == 0){
+                    ExpandableView lvwItems = listener.getExpandableView();
                     if (lvwItems != null && lvwItems.isGroupExpanded(groupPosition)) {
                         lvwItems.collapseGroup(groupPosition);
                     }

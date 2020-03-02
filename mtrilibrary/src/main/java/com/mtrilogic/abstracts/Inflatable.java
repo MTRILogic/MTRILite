@@ -2,59 +2,50 @@ package com.mtrilogic.abstracts;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
-import android.content.Context;
 import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.viewbinding.ViewBinding;
 
 import com.mtrilogic.adapters.InflatableAdapter;
 import com.mtrilogic.interfaces.InflatableAdapterListener;
-import com.mtrilogic.interfaces.OnMakeToastListener;
-import com.mtrilogic.views.InflatableView;
 
 @SuppressWarnings({"unused","WeakerAccess"})
-public abstract class Inflatable<M extends Modelable> extends LiveData<M> implements Observer<M> {
-    protected final OnMakeToastListener listener;
+public abstract class Inflatable<M extends Modelable, VB extends ViewBinding> extends LiveData<M>
+        implements Observer<M> {
+
+    protected final InflatableAdapterListener listener;
     protected final View itemView;
-    protected InflatableAdapter adapter;
-    protected InflatableView lvwItems;
-    protected Context context;
     protected int position;
+    protected VB binding;
     protected M model;
 
-// ++++++++++++++++| PROTECTED ABSTRACT METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++
+    // ================< PROTECTED ABSTRACT METHODS >===============================================
 
-    protected abstract M getModel(Modelable modelable);
+    protected abstract void onBindHolder(@NonNull Modelable modelable);
 
-    protected abstract void onBindHolder();
+    // ================< PUBLIC CONSTRUCTORS >======================================================
 
-// ++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-    public Inflatable(@NonNull Context context, int resource, @NonNull ViewGroup parent,
-                      @NonNull InflatableAdapterListener listener){
-        itemView = LayoutInflater.from(context).inflate(resource, parent, false);
-        this.context = context;
+    public Inflatable(@NonNull VB binding, @NonNull InflatableAdapterListener listener){
+        itemView = binding.getRoot();
         this.listener = listener;
-        adapter = listener.getInflatableAdapter();
-        lvwItems = listener.getInflatableView();
+        this.binding = binding;
     }
 
-// ++++++++++++++++| PUBLIC METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // ================< PUBLIC METHODS >===========================================================
 
-    public View getItemView(){
+    public final View getItemView() {
         return itemView;
     }
 
-    public void bindHolder(Modelable modelable, int position){
-        model = getModel(modelable);
+    public final void bindModel(@NonNull Modelable modelable, int position){
         this.position = position;
-        onBindHolder();
+        onBindHolder(modelable);
     }
 
-// ++++++++++++++++| PROTECTED METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // ================< PROTECTED METHODS >========================================================
 
-    protected void autoDelete(){
+    protected final void autoDelete(){
+        InflatableAdapter adapter = listener.getInflatableAdapter();
         if (adapter != null){
             if (adapter.removeModelable(model)){
                 adapter.notifyDataSetChanged();

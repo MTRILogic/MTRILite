@@ -1,39 +1,42 @@
 package com.mtrilogic.abstracts;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.viewbinding.ViewBinding;
 
 import com.mtrilogic.adapters.ExpandableAdapter;
 import com.mtrilogic.classes.Listable;
 import com.mtrilogic.classes.Mapable;
 import com.mtrilogic.interfaces.ExpandableAdapterListener;
 import com.mtrilogic.interfaces.ExpandableListener;
-import com.mtrilogic.mtrilibrary.R;
 import com.mtrilogic.views.ExpandableView;
 
 @SuppressWarnings({"unused"})
-public abstract class ExpandableFragment<P extends MapablePage> extends Fragmentable<P> implements
-        ExpandableListener, ExpandableAdapterListener {
+public abstract class ExpandableFragment<P extends MapPaginable<Modelable>, VB extends ViewBinding>
+        extends Fragmentable<P, VB> implements ExpandableListener, ExpandableAdapterListener {
+
     protected ExpandableAdapter adapter;
     protected ExpandableView lvwItems;
 
-    protected abstract void onExpandableCreated();
+    // ================< PROTECTED METHODS >========================================================
 
-// ****************| PROTECTED METHODS |************************************************************
-
-    protected void initExpandable(View view, int groupTypeCount, int childTypeCount){
-        Listable<Modelable> groupListable = page.getGroupListable();
-        Mapable<Modelable> childMapable = page.getChildMapable();
-        adapter = new ExpandableAdapter(this, groupListable, childMapable,
-                groupTypeCount, childTypeCount);
-        lvwItems = (ExpandableView) view.findViewById(R.id.lvw_items);
-        lvwItems.setAdapter(adapter);
-        onExpandableCreated();
+    protected void bindExpandable(@NonNull ExpandableView lvwItems, int groupTypeCount,
+                                  int childTypeCount){
+        this.lvwItems = lvwItems;
+        Context context = getContext();
+        if (context != null) {
+            Listable<Modelable> groupListable = page.getGroupListable();
+            Mapable<Modelable> childMapable = page.getChildMapable();
+            adapter = new ExpandableAdapter(context, this, groupListable, childMapable,
+                    groupTypeCount, childTypeCount);
+            lvwItems.setAdapter(adapter);
+        }
     }
 
-// ****************| PUBLIC OVERRIDE METHODS |******************************************************
+    // ================< PUBLIC OVERRIDE METHODS >==================================================
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -52,7 +55,7 @@ public abstract class ExpandableFragment<P extends MapablePage> extends Fragment
     }
 
     @Override
-    protected void onNewPosition() {
+    public void onNewPosition(int position) {
 
     }
 

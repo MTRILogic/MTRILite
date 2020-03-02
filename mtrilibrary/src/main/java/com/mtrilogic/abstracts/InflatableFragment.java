@@ -1,36 +1,39 @@
 package com.mtrilogic.abstracts;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.viewbinding.ViewBinding;
 
 import com.mtrilogic.adapters.InflatableAdapter;
 import com.mtrilogic.interfaces.InflatableAdapterListener;
 import com.mtrilogic.interfaces.InflatableListener;
-import com.mtrilogic.mtrilibrary.R;
 import com.mtrilogic.views.InflatableView;
 
 import java.util.ArrayList;
 
 @SuppressWarnings({"unused"})
-public abstract class InflatableFragment<P extends ListablePage> extends Fragmentable<P> implements InflatableListener, InflatableAdapterListener {
+public abstract class InflatableFragment<P extends ListPaginable<Modelable>, VB extends ViewBinding>
+        extends Fragmentable<P, VB> implements InflatableListener, InflatableAdapterListener {
+
     protected InflatableAdapter adapter;
     protected InflatableView lvwItems;
 
-    protected abstract void onInflatableCreated();
+    // ================< PROTECTED METHODS >========================================================
 
-// ****************| PROTECTED METHODS |************************************************************
-
-    protected void initInflatable(View view, int typeCount){
-        ArrayList<Modelable> modelableList = page.getModelableList();
-        adapter = new InflatableAdapter(this, modelableList, typeCount);
-        lvwItems = (InflatableView) view.findViewById(R.id.lvw_items);
-        lvwItems.setAdapter(adapter);
-        onInflatableCreated();
+    protected void bindInflatable(@NonNull InflatableView lvwItems, int typeCount){
+        this.lvwItems = lvwItems;
+        Context context = getContext();
+        if (context != null) {
+            ArrayList<Modelable> modelableList = page.getListable().getModelableList();
+            adapter = new InflatableAdapter(context, this, modelableList, typeCount);
+            lvwItems.setAdapter(adapter);
+        }
     }
 
-// ****************| PUBLIC OVERRIDE METHODS |******************************************************
+    // ================< PUBLIC OVERRIDE METHODS >==================================================
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -49,7 +52,7 @@ public abstract class InflatableFragment<P extends ListablePage> extends Fragmen
     }
 
     @Override
-    protected void onNewPosition() {
+    public void onNewPosition(int position) {
 
     }
 

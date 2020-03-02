@@ -7,58 +7,72 @@ import com.mtrilogic.abstracts.Modelable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class Mapable<M extends Modelable>{
+
     private Map<M, Listable<M>> listableMap;
 
-// ++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // ================< PUBLIC CONSTRUCTORS >======================================================
 
     public Mapable(){
-        listableMap = new LinkedHashMap<>();
+        this(new LinkedHashMap<M, Listable<M>>());
     }
 
     public Mapable(@NonNull LinkedHashMap<M, Listable<M>> listableMap){
         this.listableMap = listableMap;
     }
 
-// ++++++++++++++++| PUBLIC METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // ================< PUBLIC METHODS >===========================================================
 
     // PUT
-    public Listable<M> putListable(M modelable, Listable<M> listable){
+    public final Listable<M> putListable(@NonNull M modelable, @NonNull Listable<M> listable){
         return listableMap.put(modelable, listable);
     }
 
     // GET
-    public Map<M, Listable<M>> getListableMap(){
+    public final Map<M, Listable<M>> getListableMap(){
         return listableMap;
     }
 
-    public Listable<M> getListable(M modelable){
+    public final Listable<M> getListable(@NonNull M modelable){
         return listableMap.get(modelable);
     }
 
     // SET
-    public void setListableMap(@NonNull LinkedHashMap<M, Listable<M>> listableMap){
+    public final void setListableMap(@NonNull LinkedHashMap<M, Listable<M>> listableMap){
         this.listableMap = listableMap;
     }
 
-    // CONTAINS
-    public boolean containsModelableKey(M modelable){
+    /**
+     * Checks if this map contains a mapping for the especified modelable.
+     * @param modelable the modelable key to be tested.
+     * @return true if this map contains a mapping for modelable key
+     */
+    public final boolean containsModelableKey(@NonNull M modelable){
         return listableMap.containsKey(modelable);
     }
 
-    // DELETE
-    public Listable<M> deleteListable(M modelable){
+    /**
+     * Deletes the modelable's list from modelable's map
+     * @param modelable The modelable key
+     * @return The removed modelable's list
+     */
+    public final Listable<M> deleteListable(@NonNull M modelable){
         return listableMap.remove(modelable);
     }
 
-    // COUNT
-    public int getListableCount(){
+    /**
+     * Get listable's map size.
+     * @return The size listable's map.
+     */
+    public final int getListableCount(){
         return listableMap.size();
     }
 
-    // RESET
-    public void reset(){
+    /**
+     * Clear the listable map.
+     */
+    public final void reset(){
         listableMap.clear();
     }
 }
