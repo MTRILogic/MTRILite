@@ -1,9 +1,6 @@
 package com.mtrilogic.interfaces;
 
 @SuppressWarnings("unused")
-public interface OnMakeToastListener extends OnMakeLogListener{
-
-    // ================< PUBLIC ABSTRACT METHODS >==================================================
-
+public interface OnMakeToastListener {
     void onMakeToast(String line);
 }

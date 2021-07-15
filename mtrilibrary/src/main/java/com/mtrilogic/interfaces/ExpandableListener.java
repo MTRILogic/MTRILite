@@ -6,12 +6,12 @@ import android.view.ViewGroup;
 
 import com.mtrilogic.abstracts.ExpandableChild;
 import com.mtrilogic.abstracts.ExpandableGroup;
+import com.mtrilogic.abstracts.Modelable;
+import com.mtrilogic.classes.Mapable;
 
 @SuppressWarnings("unused")
 public interface ExpandableListener extends OnMakeToastListener{
-
-    // ================< PUBLIC ABSTRACT METHODS >==================================================
-
-    ExpandableGroup getExpandableGroup(int viewType, @NonNull LayoutInflater inflater, @NonNull ViewGroup parent);
-    ExpandableChild getExpandableChild(int viewType, @NonNull LayoutInflater inflater, @NonNull ViewGroup parent);
+    ExpandableGroup<? extends Modelable> getExpandableGroup(int viewType, @NonNull LayoutInflater inflater, @NonNull ViewGroup parent);
+    ExpandableChild<? extends Modelable> getExpandableChild(int viewType, @NonNull LayoutInflater inflater, @NonNull ViewGroup parent);
+    @NonNull Mapable<Modelable> getModelableMapable();
 }

@@ -3,45 +3,27 @@ package com.mtrilogic.abstracts;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 
 @SuppressWarnings({"unused","WeakerAccess"})
-public abstract class ModelableCreator<M extends Modelable>
-        implements Parcelable.ClassLoaderCreator<M>{
+public abstract class ModelableCreator<M extends Modelable> implements Parcelable.ClassLoaderCreator<M>{
 
-    // ================< PUBLIC ABSTRACT METHODS >==================================================
+// ++++++++++++++++| PUBLIC ABSTRACT METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    public abstract M getParcelable(@NonNull Bundle data);
-    public abstract M[] getParcelableArray(int size);
+    protected abstract M createFromData(Bundle data);
 
-    // ================< PUBLIC FINAL OVERRIDE METHODS >============================================
+// ++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     @Override
     public final M createFromParcel(Parcel src, ClassLoader loader){
-        return getParcelable(src, loader);
+        Bundle data;
+        if (src == null || loader == null || (data = src.readBundle(loader)) == null){
+            data = new Bundle();
+        }
+        return createFromData(data);
     }
 
     @Override
     public final M createFromParcel(Parcel src){
-        return getParcelable(src,null);
-    }
-
-    @Override
-    public final M[] newArray(int size){
-        return getParcelableArray(size);
-    }
-
-    // ================< PRIVATE METHODS >==========================================================
-
-    @NonNull
-    private M getParcelable(Parcel source, ClassLoader loader){
-        Bundle data = null;
-        if (source != null && loader != null){
-            data = source.readBundle(loader);
-        }
-        if (data == null){
-            data = new Bundle();
-        }
-        return getParcelable(data);
+        return createFromParcel(src, null);
     }
 }

@@ -1,68 +1,68 @@
 package com.mtrilogic.abstracts;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import com.mtrilogic.adapters.ExpandableAdapter;
-import com.mtrilogic.interfaces.ExpandableAdapterListener;
+import com.mtrilogic.classes.Mapable;
+import com.mtrilogic.interfaces.Bindable;
+import com.mtrilogic.interfaces.ExpandableItemListener;
 import com.mtrilogic.views.ExpandableView;
 
 @SuppressWarnings({"unused","WeakerAccess"})
-public abstract class ExpandableChild <M extends Modelable> extends LiveData<M> implements Observer<M> {
-
-    protected final ExpandableAdapterListener listener;
+public abstract class ExpandableChild <M extends Modelable> implements Bindable<M>, View.OnLongClickListener, View.OnClickListener {
+    protected final ExpandableItemListener listener;
     protected final View itemView;
     protected int groupPosition;
     protected int childPosition;
     protected boolean lastChild;
     protected M model;
 
-    // ================< PROTECTED ABSTRACT METHODS >===============================================
+// ++++++++++++++++| PROTECTED CONSTRUCTORS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    protected abstract void onBindHolder(@NonNull Modelable modelable);
-
-    // ================< PROTECTED CONSTRUCTORS >===================================================
-
-    public ExpandableChild(@NonNull LayoutInflater inflater, int resocurce, @NonNull ViewGroup parent,
-                           @NonNull ExpandableAdapterListener listener){
-        itemView = inflater.inflate(resocurce, parent, false);
-        this.listener = listener;
-    }
-
-    public ExpandableChild(@NonNull View itemView, @NonNull ExpandableAdapterListener listener){
+    public ExpandableChild(@NonNull View itemView, @NonNull ExpandableItemListener listener){
         this.itemView = itemView;
         this.listener = listener;
     }
 
-    // ================< PUBLIC METHODS >===========================================================
+// ++++++++++++++++| PUBLIC METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     public final View getItemView(){
+        itemView.setOnLongClickListener(this);
+        itemView.setOnClickListener(this);
+        onBindItemView();
         return itemView;
     }
 
     public final void bindModel(@NonNull Modelable modelable, int groupPosition, int childPosition, boolean lastChild){
+        model = getModelFromModelable(modelable);
         this.groupPosition = groupPosition;
         this.childPosition = childPosition;
         this.lastChild = lastChild;
-        onBindHolder(modelable);
+        onBindModel();
     }
 
-    // ================< PROTECTED METHODS >========================================================
+// ++++++++++++++++| PUBLIC OVERRIDE METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    @Override
+    public final boolean onLongClick(View v) {
+        return listener.onChildLongClick(model, groupPosition, childPosition, lastChild);
+    }
+
+    @Override
+    public final void onClick(View v) {
+        listener.onChildClick(model, groupPosition, childPosition, lastChild);
+    }
+
+// ++++++++++++++++| PROTECTED METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     protected final void autoDelete(){
-        ExpandableAdapter adapter = listener.getExpandableAdapter();
-        if (adapter != null){
-            if (adapter.deleteChildModelable(adapter.getGroupModelable(groupPosition), model)){
-                adapter.notifyDataSetChanged();
-                if (adapter.getChildrenCount(groupPosition) == 0){
-                    ExpandableView lvwItems = listener.getExpandableView();
-                    if (lvwItems != null && lvwItems.isGroupExpanded(groupPosition)) {
-                        lvwItems.collapseGroup(groupPosition);
-                    }
+        Mapable<Modelable> modelableMapable = listener.getModelableMapable();
+        if (modelableMapable.deleteChild(groupPosition, model)){
+            listener.getExpandableAdapter().notifyDataSetChanged();
+            if (modelableMapable.getChildCount(groupPosition) == 0){
+                ExpandableView lvlItems = listener.getExpandableView();
+                if (lvlItems.isGroupExpanded(groupPosition)){
+                    lvlItems.collapseGroup(groupPosition);
                 }
             }
         }

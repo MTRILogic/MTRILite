@@ -7,18 +7,14 @@ import android.support.annotation.NonNull;
 
 @SuppressWarnings({"unused"})
 public abstract class Modelable implements Parcelable {
-
     private static final String ITEM_ID = "itemId", VIEW_TYPE = "viewType", ENABLED = "enabled";
-
     private long itemId;
     private int viewType;
     private boolean enabled;
 
-    // ================< PUBLIC CONSTRUCTORS >======================================================
+// ++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    public Modelable(){
-        super();
-    }
+    public Modelable(){}
 
     public Modelable(long itemId, int viewType, boolean enabled){
         this.itemId = itemId;
@@ -26,27 +22,55 @@ public abstract class Modelable implements Parcelable {
         this.enabled = enabled;
     }
 
-    // ================< PROTECTED CONSTRUCTORS >===================================================
+// ++++++++++++++++| PROTECTED CONSTRUCTORS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    protected Modelable(@NonNull Bundle data){
-        onRestoreFromData(data);
+    protected Modelable(Bundle data){
+        if (data != null) {
+            onRestoreFromData(data);
+        }
     }
 
-    // ================< PUBLIC METHODS >===========================================================
+// ++++++++++++++++| PUBLIC OVERRIDE METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    @Override
+    public final void writeToParcel(Parcel dest, int flags){
+        Bundle data = new Bundle();
+        onSaveToData(data);
+        dest.writeBundle(data);
+    }
+
+    @Override
+    public final int describeContents(){
+        return 0;
+    }
+
+// ++++++++++++++++| PUBLIC METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    public final void setItemId(long itemId) {
+        this.itemId = itemId;
+    }
 
     public final long getItemId(){
         return itemId;
+    }
+
+    public final void setViewType(int viewType) {
+        this.viewType = viewType;
     }
 
     public final int getViewType(){
         return viewType;
     }
 
+    public final void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     public final boolean isEnabled(){
         return enabled;
     }
 
-    // ================< PROTECTED METHODS >========================================================
+    // ++++++++++++++++| PROTECTED METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     protected void onRestoreFromData(@NonNull Bundle data){
         itemId = data.getLong(ITEM_ID);
@@ -58,19 +82,5 @@ public abstract class Modelable implements Parcelable {
         data.putLong(ITEM_ID, itemId);
         data.putInt(VIEW_TYPE, viewType);
         data.putBoolean(ENABLED, enabled);
-    }
-
-    // ================< PUBLIC OVERRIDE METHODS >==================================================
-
-    @Override
-    public final void writeToParcel(@NonNull Parcel dest, int flags){
-        Bundle data = new Bundle();
-        onSaveToData(data);
-        dest.writeBundle(data);
-    }
-
-    @Override
-    public final int describeContents() {
-        return 0;
     }
 }

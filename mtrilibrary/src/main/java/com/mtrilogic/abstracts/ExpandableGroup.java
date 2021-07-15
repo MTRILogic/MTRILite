@@ -1,79 +1,84 @@
 package com.mtrilogic.abstracts;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.mtrilogic.adapters.ExpandableAdapter;
-import com.mtrilogic.classes.Listable;
-import com.mtrilogic.interfaces.ExpandableAdapterListener;
+import com.mtrilogic.classes.Mapable;
+import com.mtrilogic.interfaces.Bindable;
+import com.mtrilogic.interfaces.ExpandableItemListener;
 import com.mtrilogic.views.ExpandableView;
 
 @SuppressWarnings({"unused","WeakerAccess"})
-public abstract class ExpandableGroup<M extends Modelable>
-        extends LiveData<M> implements Observer<M> {
-
-    protected final ExpandableAdapterListener listener;
+public abstract class ExpandableGroup<M extends Modelable> implements Bindable<M>, View.OnLongClickListener, View.OnClickListener {
+    protected final ExpandableItemListener listener;
     protected final View itemView;
-    protected Listable<Modelable> childListable;
     protected int groupPosition;
     protected boolean expanded;
     protected M model;
 
-    // ================< PROTECTED ABSTRACT METHODS >===============================================
+// ++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    protected abstract void onBindHolder(@NonNull Modelable modelable);
-
-    // ================< PUBLIC CONSTRUCTORS >======================================================
-
-    public ExpandableGroup(@NonNull LayoutInflater inflater, int resource, @NonNull ViewGroup parent,
-                           @NonNull ExpandableAdapterListener listener){
-        itemView = inflater.inflate(resource, parent, false);
-        this.listener = listener;
-    }
-
-    public ExpandableGroup(@NonNull View itemView, @NonNull ExpandableAdapterListener listener){
+    public ExpandableGroup(@NonNull View itemView, @NonNull ExpandableItemListener listener){
         this.itemView = itemView;
         this.listener = listener;
     }
 
-    // ================< PUBLIC METHODS >===========================================================
+// ++++++++++++++++| PUBLIC METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     public final View getItemView() {
+        itemView.setOnLongClickListener(this);
+        itemView.setOnClickListener(this);
+        onBindItemView();
         return itemView;
     }
 
     public final void bindModel(@NonNull Modelable modelable, int groupPosition, boolean expanded){
+        model = getModelFromModelable(modelable);
         ExpandableAdapter adapter = listener.getExpandableAdapter();
-        childListable = adapter != null ? adapter.getChildListable(modelable) : null;
         this.groupPosition = groupPosition;
         this.expanded = expanded;
-        onBindHolder(modelable);
+        onBindModel();
     }
 
-    // ================< PROTECTED METHODS >========================================================
+// ++++++++++++++++| PUBLIC OVERRIDE METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    @Override
+    public final boolean onLongClick(View v) {
+        return listener.onGroupLongClick(model, groupPosition, expanded);
+    }
+
+    @Override
+    public final void onClick(View v) {
+        listener.onGroupClick(model, groupPosition, expanded);
+    }
+
+// ++++++++++++++++| PROTECTED METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     protected final void autoDelete(){
-        ExpandableAdapter adapter = listener.getExpandableAdapter();
-        if (adapter != null && adapter.deleteGroupModelable(model)){
-            adapter.notifyDataSetChanged();
+        if (listener.getModelableMapable().deleteGroup(model)){
+            listener.getExpandableAdapter().notifyDataSetChanged();
         }
     }
 
-    protected final void addNewChildModelable(@NonNull Modelable childModelable, long idx){
-        ExpandableAdapter adapter = listener.getExpandableAdapter();
-        if (adapter != null && adapter.appendChildModelable(model, childModelable)) {
-            adapter.notifyDataSetChanged();
-            childListable.setIdx(++idx);
-            if (adapter.getChildrenCount(groupPosition) == 1){
+    protected final void addChild(@NonNull Modelable child){
+        Mapable<Modelable> modelableMapable = listener.getModelableMapable();
+        if (modelableMapable.appendChild(groupPosition, child)){
+            listener.getExpandableAdapter().notifyDataSetChanged();
+            if (modelableMapable.getChildCount(groupPosition) == 1){
                 ExpandableView lvwItems = listener.getExpandableView();
-                if (lvwItems != null && !lvwItems.isGroupExpanded(groupPosition)){
+                if (!lvwItems.isGroupExpanded(groupPosition)){
                     lvwItems.expandGroup(groupPosition);
                 }
             }
         }
+    }
+
+    protected final void insertChild(int childPosition, @NonNull Modelable child){
+
+    }
+
+    protected final void deleteChild(@NonNull Modelable child){
+
     }
 }

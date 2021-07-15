@@ -1,60 +1,57 @@
 package com.mtrilogic.abstracts;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
 import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
-import com.mtrilogic.adapters.InflatableAdapter;
-import com.mtrilogic.interfaces.InflatableAdapterListener;
+import com.mtrilogic.interfaces.Bindable;
+import com.mtrilogic.interfaces.InflatableItemListener;
 
 @SuppressWarnings({"unused","WeakerAccess"})
-public abstract class Inflatable<M extends Modelable> extends LiveData<M>
-        implements Observer<M> {
-
-    protected final InflatableAdapterListener listener;
+public abstract class Inflatable<M extends Modelable> implements Bindable<M>, View.OnLongClickListener, View.OnClickListener {
+    protected final InflatableItemListener listener;
     protected final View itemView;
     protected int position;
     protected M model;
 
-    // ================< PROTECTED ABSTRACT METHODS >===============================================
+// ++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    protected abstract void onBindHolder(@NonNull Modelable modelable);
-
-    // ================< PUBLIC CONSTRUCTORS >======================================================
-
-    public Inflatable(@NonNull LayoutInflater inflater, int resource, @NonNull ViewGroup parent,
-                      @NonNull InflatableAdapterListener listener){
-        itemView = inflater.inflate(resource, parent, false);
-        this.listener = listener;
-    }
-
-    public Inflatable(@NonNull View itemView, @NonNull InflatableAdapterListener listener){
+    public Inflatable(@NonNull View itemView, @NonNull InflatableItemListener listener){
         this.itemView = itemView;
         this.listener = listener;
     }
 
-    // ================< PUBLIC METHODS >===========================================================
+// ++++++++++++++++| PUBLIC OVERRIDE METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    public final View getItemView() {
+    @Override
+    public boolean onLongClick(View v) {
+        return listener.onItemLongClick(model, position);
+    }
+
+    @Override
+    public void onClick(View v) {
+        listener.onItemClick(model, position);
+    }
+
+// ++++++++++++++++| PUBLIC METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    public final View getItemView(){
+        itemView.setOnLongClickListener(this);
+        itemView.setOnClickListener(this);
+        onBindItemView();
         return itemView;
     }
 
     public final void bindModel(@NonNull Modelable modelable, int position){
+        model = getModelFromModelable(modelable);
         this.position = position;
-        onBindHolder(modelable);
+        onBindModel();
     }
 
-    // ================< PROTECTED METHODS >========================================================
+// ++++++++++++++++| PROTECTED METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     protected final void autoDelete(){
-        InflatableAdapter adapter = listener.getInflatableAdapter();
-        if (adapter != null){
-            if (adapter.removeModelable(model)){
-                adapter.notifyDataSetChanged();
-            }
+        if (listener.getModelableListable().deleteItem(model)){
+            listener.getInflatableAdapter().notifyDataSetChanged();
         }
     }
 }
