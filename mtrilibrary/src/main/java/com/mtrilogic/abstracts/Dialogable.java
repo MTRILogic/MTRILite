@@ -10,14 +10,18 @@ import com.mtrilogic.interfaces.OnDialogDoneListener;
 public abstract class Dialogable extends Dialog implements DialogInterface.OnClickListener{
     private final OnDialogDoneListener listener;
 
-// ++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*==============================================================================================
+    PUBLIC CONSTRUCTORS
+    ==============================================================================================*/
 
     public Dialogable(Context context, OnDialogDoneListener listener){
         super(context);
         this.listener = listener;
     }
 
-// ++++++++++++++++| PROTECTED METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*==============================================================================================
+    PROTECTED METHODS
+    ==============================================================================================*/
 
     protected OnDialogDoneListener getListener(){
         return listener;

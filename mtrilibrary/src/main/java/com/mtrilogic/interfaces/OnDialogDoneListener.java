@@ -5,5 +5,5 @@ import android.support.annotation.NonNull;
 
 @SuppressWarnings("unused")
 public interface OnDialogDoneListener extends OnMakeToastListener{
-    void onDialogDone(@NonNull Bundle bundle);
+    void onDialogDone(@NonNull Bundle data);
 }

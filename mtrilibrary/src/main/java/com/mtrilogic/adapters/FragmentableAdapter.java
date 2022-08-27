@@ -9,38 +9,42 @@ import com.mtrilogic.abstracts.Fragmentable;
 import com.mtrilogic.abstracts.Paginable;
 import com.mtrilogic.classes.Base;
 import com.mtrilogic.classes.Listable;
-import com.mtrilogic.interfaces.FragmentableListener;
+import com.mtrilogic.interfaces.FragmentableAdapterListener;
 
 @SuppressWarnings({"unused"})
-public final class FragmentableAdapter extends FragmentPagerAdapter{
-    private final FragmentableListener listener;
+public final class FragmentableAdapter extends FragmentPagerAdapter {
+    private final FragmentableAdapterListener listener;
 
-// ++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*==============================================================================================
+    PUBLIC CONSTRUCTOR
+    ==============================================================================================*/
 
-    public FragmentableAdapter(@NonNull FragmentManager manager, @NonNull FragmentableListener listener){
+    public FragmentableAdapter(@NonNull FragmentManager manager, @NonNull FragmentableAdapterListener listener){
         super(manager);
         this.listener = listener;
     }
 
-// ++++++++++++++++| PUBLIC OVERRIDE METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*==============================================================================================
+    PUBLIC OVERRIDE METHODS
+    ==============================================================================================*/
 
     @NonNull
     @Override
-    public final Fragmentable<? extends Paginable> getItem(int position){
+    public Fragmentable<? extends Paginable> getItem(int position){
         return listener.getFragmentable(getPaginable(position), position);
     }
 
     @Override
-    public final int getCount(){
-        return getPaginableListable().getItemCount();
+    public int getCount(){
+        return getPaginableListable().getCount();
     }
 
     @Override
-    public final int getItemPosition(@NonNull Object object){
+    public int getItemPosition(@NonNull Object object){
         Fragmentable<? extends Paginable> fragmentable = (Fragmentable<? extends Paginable>)object;
         Paginable paginable = fragmentable.getPaginable();
-        if (listener.getPaginableListable().containsItem(paginable)){
-            int position = getPaginableListable().getItemPosition(paginable);
+        if (listener.getPaginableListable().contains(paginable)){
+            int position = getPaginableListable().getPosition(paginable);
             if (fragmentable.getPosition() != position){
                 fragmentable.setPosition(position);
                 listener.onPositionChanged(position);
@@ -56,22 +60,24 @@ public final class FragmentableAdapter extends FragmentPagerAdapter{
 
     @Nullable
     @Override
-    public final CharSequence getPageTitle(int position){
+    public CharSequence getPageTitle(int position){
         return getPaginable(position).getPageTitle();
     }
 
     @Override
-    public final long getItemId(int position){
+    public long getItemId(int position){
         return getPaginable(position).getItemId();
     }
 
-// ++++++++++++++++| PRIVATE METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*==============================================================================================
+    PRIVATE METHODS
+    ==============================================================================================*/
 
     private Listable<Paginable> getPaginableListable(){
         return listener.getPaginableListable();
     }
 
     private Paginable getPaginable(int position){
-        return getPaginableListable().getItem(position);
+        return getPaginableListable().get(position);
     }
 }

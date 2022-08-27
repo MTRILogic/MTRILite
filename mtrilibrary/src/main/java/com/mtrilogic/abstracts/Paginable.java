@@ -3,12 +3,15 @@ package com.mtrilogic.abstracts;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-@SuppressWarnings({"unused","WeakerAccess"})
+@SuppressWarnings({"unused"})
 public abstract class Paginable extends Modelable {
     private static final String PAGE_TITLE = "pageTitle", TAG_NAME = "tagName";
+
     private String pageTitle, tagName;
 
-// ++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*==============================================================================================
+    PUBLIC CONSTRUCTORS
+    ==============================================================================================*/
 
     public Paginable(){}
 
@@ -18,13 +21,17 @@ public abstract class Paginable extends Modelable {
         this.tagName = tagName;
     }
 
-// ++++++++++++++++| PROTECTED CONSTRUCTORS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*==============================================================================================
+    PROTECTED CONSTRUCTORS
+    ==============================================================================================*/
 
     protected Paginable(Bundle data){
         super(data);
     }
 
-// ++++++++++++++++| PUBLIC METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*==============================================================================================
+    PUBLIC FINAL METHODS
+    ==============================================================================================*/
 
     public final String getPageTitle(){
         return pageTitle;
@@ -42,18 +49,20 @@ public abstract class Paginable extends Modelable {
         this.tagName = tagName;
     }
 
-// ++++++++++++++++| PROTECTED OVERRIDE METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*==============================================================================================
+    PROTECTED OVERRIDE METHODS
+    ==============================================================================================*/
 
     @Override
-    protected void onRestoreFromData(@NonNull Bundle data) {
-        super.onRestoreFromData(data);
+    protected void restoreFromData(@NonNull Bundle data) {
+        super.restoreFromData(data);
         pageTitle = data.getString(PAGE_TITLE);
         tagName = data.getString(TAG_NAME);
     }
 
     @Override
-    protected void onSaveToData(@NonNull Bundle data) {
-        super.onSaveToData(data);
+    protected void saveToData(@NonNull Bundle data) {
+        super.saveToData(data);
         data.putString(PAGE_TITLE, pageTitle);
         data.putString(TAG_NAME, tagName);
     }

@@ -7,17 +7,18 @@ import android.view.ViewGroup;
 
 import com.mtrilogic.abstracts.Modelable;
 import com.mtrilogic.abstracts.Recyclable;
-import com.mtrilogic.classes.Listable;
-import com.mtrilogic.interfaces.RecyclableListener;
+import com.mtrilogic.interfaces.RecyclableAdapterListener;
+
+import java.util.ArrayList;
 
 @SuppressWarnings({"unused"})
 public final class RecyclableAdapter extends RecyclerView.Adapter<Recyclable<? extends Modelable>>{
-    private final RecyclableListener listener;
+    private final RecyclableAdapterListener listener;
     private final LayoutInflater inflater;
 
 // ++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    public RecyclableAdapter(@NonNull LayoutInflater inflater, @NonNull RecyclableListener listener){
+    public RecyclableAdapter(@NonNull LayoutInflater inflater, @NonNull RecyclableAdapterListener listener){
         this.inflater = inflater;
         this.listener = listener;
         setHasStableIds(true);
@@ -27,40 +28,42 @@ public final class RecyclableAdapter extends RecyclerView.Adapter<Recyclable<? e
 
     @NonNull
     @Override
-    public final Recyclable<? extends Modelable> onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
+    public Recyclable<? extends Modelable> onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
         Recyclable<? extends Modelable> recyclable = listener.getRecyclable(viewType, inflater, parent);
         recyclable.onBindItemView();
         return recyclable;
     }
 
     @Override
-    public final void onBindViewHolder(@NonNull Recyclable holder, int position){
+    public void onBindViewHolder(@NonNull Recyclable holder, int position){
         Modelable modelable = getModelable(position);
         holder.bindModel(modelable, position);
     }
 
     @Override
-    public final int getItemCount(){
-        return getModelableListable().getItemCount();
+    public int getItemCount(){
+        return getModelableList().size();
     }
 
     @Override
-    public final int getItemViewType(int position){
+    public int getItemViewType(int position){
         return getModelable(position).getViewType();
     }
 
     @Override
-    public final long getItemId(int position){
+    public long getItemId(int position){
         return getModelable(position).getItemId();
     }
 
-// ++++++++++++++++| PRIVATE METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*==============================================================================================
+    PRIVATE METHODS
+    ==============================================================================================*/
 
-    private Listable<Modelable> getModelableListable(){
-        return listener.getModelableListable();
+    private ArrayList<Modelable> getModelableList(){
+        return listener.getModelableListable().getList();
     }
 
     private Modelable getModelable(int position){
-        return getModelableListable().getItem(position);
+        return getModelableList().get(position);
     }
 }

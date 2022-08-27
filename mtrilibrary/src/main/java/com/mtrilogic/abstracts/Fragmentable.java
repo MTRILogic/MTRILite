@@ -8,24 +8,32 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
-import com.mtrilogic.interfaces.FragmentListener;
+import com.mtrilogic.classes.Base;
+import com.mtrilogic.interfaces.FragmentableItemListener;
+import com.mtrilogic.interfaces.FragmentableListener;
 import com.mtrilogic.interfaces.OnMakeToastListener;
+import com.mtrilogic.mtrilibrary.R;
 
 @SuppressWarnings({"unused"})
 public abstract class Fragmentable<P extends Paginable> extends Fragment implements OnMakeToastListener {
-    private static final String PAGINABLE = "paginable", POSITION = "position";
+    private static final String PAGINABLE = "paginable", POSITION = "position", INDEX = "index", TOP = "top";
 
-    protected FragmentListener listener;
+    protected FragmentableListener listener;
     protected int position;
     protected P page;
 
-// ++++++++++++++++| PROTECTED ABSTRACTS METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*==============================================================================================
+    PROTECTED ABSTRACT METHODS
+    ==============================================================================================*/
 
     @NonNull
     protected abstract View onCreateViewFragment(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState);
 
-// ++++++++++++++++| PUBLIC STATIC METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*==============================================================================================
+    PUBLIC STATIC METHOD
+    ==============================================================================================*/
 
     @NonNull
     public static Fragmentable<? extends Paginable> getInstance(@NonNull Fragmentable<? extends Paginable> fragmentable, @NonNull Paginable paginable, int position){
@@ -36,13 +44,15 @@ public abstract class Fragmentable<P extends Paginable> extends Fragment impleme
         return fragmentable;
     }
 
-// ++++++++++++++++| PUBLIC OVERRIDE METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*==============================================================================================
+    PUBLIC OVERRIDE METHODS
+    ==============================================================================================*/
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (context instanceof FragmentListener){
-            listener = (FragmentListener) context;
+        if (context instanceof FragmentableListener){
+            listener = (FragmentableListener) context;
         }
     }
 
@@ -59,6 +69,14 @@ public abstract class Fragmentable<P extends Paginable> extends Fragment impleme
                 position = args.getInt(POSITION);
             }
         }
+        if (page != null && listener != null){
+            String tagName = page.getTagName();
+            String tag = getTag();
+            if (tag != null && !tag.equals(tagName)){
+                page.setTagName(tag);
+                listener.onNewTagName(tagName, tag);
+            }
+        }
     }
 
     @Nullable
@@ -67,14 +85,12 @@ public abstract class Fragmentable<P extends Paginable> extends Fragment impleme
         if (page != null){
             return onCreateViewFragment(inflater, container, savedInstanceState);
         }
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return inflater.inflate(R.layout.fragment_default, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        position = listener.getPaginableListable().getItemPosition(page);
-        onNewPosition();
     }
 
     @Override
@@ -92,44 +108,70 @@ public abstract class Fragmentable<P extends Paginable> extends Fragment impleme
 
     @Override
     public final void onMakeToast(String line) {
-        if (listener != null){
-            listener.onMakeToast(line);
-        }
+        makeToast(line);
     }
 
-// ++++++++++++++++| PUBLIC METHODS |+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*==============================================================================================
+    PUBLIC METHODS
+    ==============================================================================================*/
 
-    public final void setPage(P page) {
+    public void setPage(P page) {
         this.page = page;
-        onNewPage();
     }
 
-    public final Paginable getPaginable(){
+    @NonNull
+    public Paginable getPaginable(){
         return page;
     }
 
-    public final void setPosition(int position) {
+    public void setPosition(int position) {
         this.position = position;
-        onNewPosition();
     }
 
-    public final int getPosition() {
+    public int getPosition() {
         return position;
     }
 
-// ++++++++++++++++| PROTECTED METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*==============================================================================================
+    PROTECTED METHODS
+    ==============================================================================================*/
 
-    protected void onNewPosition(){
-
+    protected void restoreTopIndex(@NonNull ListView lvwItems){
+        Bundle args = getArguments();
+        if (args != null) {
+            int index = args.getInt(INDEX, Base.INVALID_POSITION);
+            if (index != Base.INVALID_POSITION) {
+                int top = args.getInt(TOP);
+                lvwItems.post(() -> lvwItems.setSelectionFromTop(index, top));
+            }
+        }
     }
 
-    protected void onNewPage(){
-
+    protected void saveTopIndex(@NonNull ListView lvwItems){
+        Bundle args = getArguments();
+        if (args != null) {
+            int index = lvwItems.getFirstVisiblePosition();
+            View view = lvwItems.getChildAt(0);
+            int top = view != null ? view.getTop() - lvwItems.getPaddingTop() : 0;
+            args.putInt(INDEX, index);
+            args.putInt(TOP, top);
+        }
     }
 
-    protected final void autoDelete(){
-        if (listener != null && listener.getPaginableListable().deleteItem(page)) {
-            listener.getFragmentableAdapter().notifyDataSetChanged();
+    protected void autoDelete(){
+        if (listener != null && page != null){
+            if (listener instanceof FragmentableItemListener){
+                FragmentableItemListener itemListener = (FragmentableItemListener) listener;
+                if (itemListener.getPaginableListable().delete(page)){
+                    itemListener.getFragmentableAdapter().notifyDataSetChanged();
+                }
+            }
+        }
+    }
+
+    protected void makeToast(String line){
+        if (listener != null){
+            listener.onMakeToast(line);
         }
     }
 }

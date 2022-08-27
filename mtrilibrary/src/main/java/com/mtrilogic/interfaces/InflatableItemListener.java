@@ -1,15 +1,20 @@
 package com.mtrilogic.interfaces;
 
 import android.support.annotation.NonNull;
+import android.widget.ListView;
 
 import com.mtrilogic.abstracts.Modelable;
 import com.mtrilogic.adapters.InflatableAdapter;
 import com.mtrilogic.classes.Listable;
-import com.mtrilogic.views.InflatableView;
 
 @SuppressWarnings("unused")
-public interface InflatableItemListener extends ItemListener{
-    @NonNull Listable<Modelable> getModelableListable();
-    @NonNull InflatableAdapter getInflatableAdapter();
-    @NonNull InflatableView getInflatableView();
+public interface InflatableItemListener extends InflatableListener, ItemListener {
+    @NonNull
+    Listable<Modelable> getModelableListable();
+
+    @NonNull
+    InflatableAdapter getInflatableAdapter();
+
+    @NonNull
+    ListView getListView();
 }
