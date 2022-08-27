@@ -1,1 +1,1 @@
-include ':app', ':mtrilibrary'
+include ':app', ':MTRILite'
