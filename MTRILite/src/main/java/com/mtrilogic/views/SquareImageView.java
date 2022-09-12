@@ -11,6 +11,10 @@ import com.mtrilogic.mtrilibrary.R;
 public final class SquareImageView extends AppCompatImageView {
     private final boolean portrait;
 
+    /*==============================================================================================
+    PUBLIC CONSTRUCTORS
+    ==============================================================================================*/
+
     public SquareImageView(Context context, boolean portrait){
         super(context);
         this.portrait = portrait;
@@ -22,6 +26,10 @@ public final class SquareImageView extends AppCompatImageView {
         portrait = typedArray.getBoolean(R.styleable.SquareImageView_portrait,false);
         typedArray.recycle();
     }
+
+    /*==============================================================================================
+    PROTECTED OVERRIDE METHODS
+    ==============================================================================================*/
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec){

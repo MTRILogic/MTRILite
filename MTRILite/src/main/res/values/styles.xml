@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ActivityTheme" parent="FragmentTheme">
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="FragmentTheme" parent="ItemTheme">
+        <item name="android:background">#555555</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="ItemTheme">
+        <item name="android:textAppearance">@android:style/TextAppearance.Holo.Medium</item>
+    </style>
+
+</resources>

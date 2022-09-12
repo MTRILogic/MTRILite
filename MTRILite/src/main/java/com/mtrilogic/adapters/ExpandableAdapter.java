@@ -8,12 +8,12 @@ import android.widget.BaseExpandableListAdapter;
 
 import com.mtrilogic.abstracts.ExpandableChild;
 import com.mtrilogic.abstracts.ExpandableGroup;
-import com.mtrilogic.abstracts.Modelable;
-import com.mtrilogic.classes.Mapable;
+import com.mtrilogic.abstracts.Model;
+import com.mtrilogic.classes.Mappable;
 import com.mtrilogic.interfaces.ExpandableAdapterListener;
 
 @SuppressWarnings("unused")
-public class ExpandableAdapter extends BaseExpandableListAdapter {
+public final class ExpandableAdapter extends BaseExpandableListAdapter {
     private final ExpandableAdapterListener listener;
     private final LayoutInflater inflater;
     private final int groupTypeCount, childTypeCount;
@@ -35,22 +35,22 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getGroupCount() {
-        return getMapable().getGroupCount();
+        return getModelMappable().getGroupCount();
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return getMapable().getChildCount(getGroup(groupPosition));
+        return getModelMappable().getChildCount(getGroup(groupPosition));
     }
 
     @Override
-    public Modelable getGroup(int groupPosition) {
-        return getMapable().getGroup(groupPosition);
+    public Model getGroup(int groupPosition) {
+        return getModelMappable().getGroup(groupPosition);
     }
 
     @Override
-    public Modelable getChild(int groupPosition, int childPosition) {
-        return getMapable().getChild(getGroup(groupPosition), childPosition);
+    public Model getChild(int groupPosition, int childPosition) {
+        return getModelMappable().getChild(getGroup(groupPosition), childPosition);
     }
 
     @Override
@@ -70,8 +70,8 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        Modelable group = getGroup(groupPosition);
-        ExpandableGroup<? extends Modelable> item;
+        Model group = getGroup(groupPosition);
+        ExpandableGroup<? extends Model> item;
         if (convertView != null){
             item = (ExpandableGroup<?>) convertView.getTag();
         }else {
@@ -85,8 +85,8 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        Modelable child = getChild(groupPosition, childPosition);
-        ExpandableChild<? extends Modelable> item;
+        Model child = getChild(groupPosition, childPosition);
+        ExpandableChild<? extends Model> item;
         if (convertView != null){
             item = (ExpandableChild<?>) convertView.getTag();
         }else {
@@ -94,14 +94,13 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
             convertView = item.getItemView();
             convertView.setTag(item);
         }
-        item.bindModelable(child, groupPosition, childPosition, isLastChild);
+        item.bindModel(child, groupPosition, childPosition, isLastChild);
         return convertView;
     }
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        // provisionalmente, todos los child serán seleccionables.
-        return true;
+        return getChild(groupPosition, childPosition).isEnabled();
     }
 
     @Override
@@ -135,11 +134,10 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
     }
 
     /*==============================================================================================
-    PRIVATE METHODS
+    PRIVATE METHOD
     ==============================================================================================*/
 
-    private Mapable<Modelable> getMapable(){
-        return listener.getModelableMapable();
+    private Mappable<Model> getModelMappable(){
+        return listener.getModelMappable();
     }
 }
-

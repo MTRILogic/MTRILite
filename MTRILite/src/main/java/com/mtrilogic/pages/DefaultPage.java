@@ -2,12 +2,12 @@ package com.mtrilogic.pages;
 
 import android.os.Bundle;
 
-import com.mtrilogic.abstracts.Paginable;
-import com.mtrilogic.abstracts.PaginableCreator;
+import com.mtrilogic.abstracts.Page;
+import com.mtrilogic.abstracts.PageCreator;
 
 @SuppressWarnings("unused")
-public class DefaultPage extends Paginable {
-    public static final Creator<DefaultPage> CREATOR = new PaginableCreator<DefaultPage>() {
+public class DefaultPage extends Page {
+    public static final Creator<DefaultPage> CREATOR = new PageCreator<DefaultPage>() {
         @Override
         public DefaultPage createFromData(Bundle data) {
             return new DefaultPage(data);
@@ -19,6 +19,10 @@ public class DefaultPage extends Paginable {
         }
     };
 
+    /*==============================================================================================
+    PUBLIC CONSTRUCTORS
+    ==============================================================================================*/
+
     public DefaultPage() {
         super();
     }
@@ -26,6 +30,10 @@ public class DefaultPage extends Paginable {
     public DefaultPage(String pageTitle, String tagName, long itemId, int viewType) {
         super(pageTitle, tagName, itemId, viewType);
     }
+
+    /*==============================================================================================
+    PROTECTED CONSTRUCTOR
+    ==============================================================================================*/
 
     protected DefaultPage(Bundle data) {
         super(data);

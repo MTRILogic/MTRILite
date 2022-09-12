@@ -1,14 +1,13 @@
 package com.mtrilogic.models;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 
-import com.mtrilogic.abstracts.Modelable;
-import com.mtrilogic.abstracts.ModelableCreator;
+import com.mtrilogic.abstracts.Model;
+import com.mtrilogic.abstracts.ModelCreator;
 
 @SuppressWarnings("unused")
-public class DefaultModel extends Modelable {
-    public static final Creator<DefaultModel> CREATOR = new ModelableCreator<DefaultModel>() {
+public class DefaultModel extends Model {
+    public static final Creator<DefaultModel> CREATOR = new ModelCreator<DefaultModel>() {
         @Override
         public DefaultModel createFromData(Bundle data) {
             return new DefaultModel(data);
@@ -20,9 +19,9 @@ public class DefaultModel extends Modelable {
         }
     };
 
-    private static final String TITLE= "title";
-
-    private String title;
+    /*==============================================================================================
+    PUBLIC CONSTRUCTORS
+    ==============================================================================================*/
 
     public DefaultModel() {
         super();
@@ -32,27 +31,11 @@ public class DefaultModel extends Modelable {
         super(itemId, viewType, enabled);
     }
 
-    private DefaultModel(Bundle data) {
+    /*==============================================================================================
+    PROTECTED CONSTRUCTOR
+    ==============================================================================================*/
+
+    protected DefaultModel(Bundle data) {
         super(data);
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    @Override
-    protected void restoreFromData(@NonNull Bundle data) {
-        super.restoreFromData(data);
-        title = data.getString(TITLE);
-    }
-
-    @Override
-    protected void saveToData(@NonNull Bundle data) {
-        super.saveToData(data);
-        data.putString(TITLE, title);
     }
 }

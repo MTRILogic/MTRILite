@@ -3,7 +3,7 @@ package com.mtrilogic.classes;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.mtrilogic.abstracts.Modelable;
+import com.mtrilogic.abstracts.Model;
 import com.mtrilogic.interfaces.Observable;
 import com.mtrilogic.interfaces.OnIterationListener;
 
@@ -13,7 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @SuppressWarnings("unused")
-public class Mapable<M extends Modelable> {
+public final class Mappable<M extends Model> {
     private final Map<M, Listable<M>> childListableMap = new HashMap<>();
     private final Listable<M> groupListable;
 
@@ -23,11 +23,11 @@ public class Mapable<M extends Modelable> {
     PUBLIC CONSTRUCTORS
     ==============================================================================================*/
 
-    public Mapable(){
+    public Mappable(){
         groupListable = new Listable<>();
     }
 
-    public Mapable(@NonNull Bundle data){
+    public Mappable(@NonNull Bundle data){
         groupListable = new Listable<>(data);
         iterateGroupList(group -> {
             Listable<M> listable = new Listable<>(data, group.getItemId());
@@ -202,7 +202,7 @@ public class Mapable<M extends Modelable> {
     }
 
     public ArrayList<M> getLastChildList() {
-        return lastChildListable.getList();
+        return lastChildListable != null ? lastChildListable.getList() : null;
     }
 
     public M getGroup(int groupPosition){
@@ -340,7 +340,7 @@ public class Mapable<M extends Modelable> {
 
     public int getChildPosition(@NonNull M group, @NonNull M child){
         Listable<M> childListable = getChildListable(group);
-        return childListable != null ? childListable.getPosition(child) : -1;
+        return childListable != null ? childListable.getPosition(child) : Base.INVALID_POSITION;
     }
 
     // COUNT METHODS ===============================================================================
@@ -351,7 +351,7 @@ public class Mapable<M extends Modelable> {
 
     public int getChildCount(@NonNull M group){
         Listable<M> childListable = getChildListable(group);
-        return childListable != null ? childListable.getCount() : -1;
+        return childListable != null ? childListable.getCount() : Base.INVALID_POSITION;
     }
 
     // CLEAR METHODS ===============================================================================
@@ -370,11 +370,11 @@ public class Mapable<M extends Modelable> {
 
     // Experimental functions ======================================================================
 
-    public boolean insertMapable(int groupPosition, @NonNull Mapable<M> mapable){
-        ArrayList<M> groupList = mapable.getGroupList();
+    public boolean insertMapable(int groupPosition, @NonNull Mappable<M> mappable){
+        ArrayList<M> groupList = mappable.getGroupList();
         if (groupListable.insertList(groupPosition, groupList)){
             for (M group : groupList){
-                lastChildListable = childListableMap.put(group, mapable.getChildListable(group));
+                lastChildListable = childListableMap.put(group, mappable.getChildListable(group));
             }
             return true;
         }
@@ -382,11 +382,11 @@ public class Mapable<M extends Modelable> {
         return false;
     }
 
-    public boolean addMapable(@NonNull Mapable<M> mapable){
-        ArrayList<M> groupList = mapable.getGroupList();
+    public boolean addMapable(@NonNull Mappable<M> mappable){
+        ArrayList<M> groupList = mappable.getGroupList();
         if (groupListable.appendList(groupList)){
             for (M group : groupList){
-                lastChildListable = childListableMap.put(group, mapable.getChildListable(group));
+                lastChildListable = childListableMap.put(group, mappable.getChildListable(group));
             }
             return true;
         }

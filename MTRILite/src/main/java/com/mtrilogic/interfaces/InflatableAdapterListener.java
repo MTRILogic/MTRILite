@@ -5,14 +5,14 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.mtrilogic.abstracts.Inflatable;
-import com.mtrilogic.abstracts.Modelable;
+import com.mtrilogic.abstracts.Model;
 import com.mtrilogic.classes.Listable;
 
 @SuppressWarnings("unused")
-public interface InflatableAdapterListener extends OnMakeToastListener{
+public interface InflatableAdapterListener extends AdapterListener, OnMakeToastListener {
     @NonNull
-    Inflatable<? extends Modelable> getInflatable(int viewType, @NonNull LayoutInflater inflater, @NonNull ViewGroup parent);
+    Inflatable<? extends Model> getInflatable(int viewType, @NonNull LayoutInflater inflater, @NonNull ViewGroup parent);
 
     @NonNull
-    Listable<Modelable> getModelableListable();
+    Listable<Model> getModelListable();
 }

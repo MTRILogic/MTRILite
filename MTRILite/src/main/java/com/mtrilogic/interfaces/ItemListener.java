@@ -1,5 +1,5 @@
 package com.mtrilogic.interfaces;
 
 @SuppressWarnings("unused")
-public interface ItemListener extends OnMakeToastListener{
+public interface ItemListener {
 }

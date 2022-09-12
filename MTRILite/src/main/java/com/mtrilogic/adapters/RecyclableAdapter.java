@@ -5,18 +5,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.mtrilogic.abstracts.Modelable;
+import com.mtrilogic.abstracts.Model;
 import com.mtrilogic.abstracts.Recyclable;
+import com.mtrilogic.classes.Listable;
 import com.mtrilogic.interfaces.RecyclableAdapterListener;
 
-import java.util.ArrayList;
-
 @SuppressWarnings({"unused"})
-public final class RecyclableAdapter extends RecyclerView.Adapter<Recyclable<? extends Modelable>>{
+public final class RecyclableAdapter extends RecyclerView.Adapter<Recyclable<? extends Model>>{
     private final RecyclableAdapterListener listener;
     private final LayoutInflater inflater;
 
-// ++++++++++++++++| PUBLIC CONSTRUCTORS |++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*==============================================================================================
+    PUBLIC CONSTRUCTOR
+    ==============================================================================================*/
 
     public RecyclableAdapter(@NonNull LayoutInflater inflater, @NonNull RecyclableAdapterListener listener){
         this.inflater = inflater;
@@ -24,46 +25,48 @@ public final class RecyclableAdapter extends RecyclerView.Adapter<Recyclable<? e
         setHasStableIds(true);
     }
 
-// ++++++++++++++++| PUBLIC OVERRIDE METHODS |++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    /*==============================================================================================
+    PUBLIC OVERRIDE METHODS
+    ==============================================================================================*/
 
     @NonNull
     @Override
-    public Recyclable<? extends Modelable> onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-        Recyclable<? extends Modelable> recyclable = listener.getRecyclable(viewType, inflater, parent);
-        recyclable.onBindItemView();
-        return recyclable;
+    public Recyclable<? extends Model> onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
+        Recyclable<? extends Model> item = listener.getRecyclable(viewType, inflater, parent);
+        item.bindItemView();
+        return item;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Recyclable holder, int position){
-        Modelable modelable = getModelable(position);
-        holder.bindModel(modelable, position);
+    public void onBindViewHolder(@NonNull Recyclable item, int position){
+        Model model = getModel(position);
+        item.bindModel(model, position);
     }
 
     @Override
     public int getItemCount(){
-        return getModelableList().size();
+        return getModelListable().getCount();
     }
 
     @Override
     public int getItemViewType(int position){
-        return getModelable(position).getViewType();
+        return getModel(position).getViewType();
     }
 
     @Override
     public long getItemId(int position){
-        return getModelable(position).getItemId();
+        return getModel(position).getItemId();
     }
 
     /*==============================================================================================
     PRIVATE METHODS
     ==============================================================================================*/
 
-    private ArrayList<Modelable> getModelableList(){
-        return listener.getModelableListable().getList();
+    private Listable<Model> getModelListable(){
+        return listener.getModelListable();
     }
 
-    private Modelable getModelable(int position){
-        return getModelableList().get(position);
+    private Model getModel(int position){
+        return getModelListable().get(position);
     }
 }

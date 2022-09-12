@@ -3,13 +3,15 @@ package com.mtrilogic.abstracts;
 import android.support.annotation.NonNull;
 import android.view.View;
 
-import com.mtrilogic.interfaces.Bindable;
 import com.mtrilogic.interfaces.InflatableItemListener;
+import com.mtrilogic.interfaces.ModelBindable;
 
 @SuppressWarnings("unused")
-public abstract class Inflatable<M extends Modelable> implements Bindable<M>, View.OnClickListener, View.OnLongClickListener {
+public abstract class Inflatable<M extends Model> implements ModelBindable {
     protected final InflatableItemListener listener;
     protected final View itemView;
+
+    private final Class<M> clazz;
 
     protected int position;
     protected M model;
@@ -18,9 +20,10 @@ public abstract class Inflatable<M extends Modelable> implements Bindable<M>, Vi
     PUBLIC CONSTRUCTOR
     ==============================================================================================*/
 
-    public Inflatable(@NonNull View itemView, @NonNull InflatableItemListener listener){
+    public Inflatable(@NonNull Class<M> clazz, @NonNull View itemView, @NonNull InflatableItemListener listener){
         this.itemView = itemView;
         this.listener = listener;
+        this.clazz = clazz;
     }
 
     /*==============================================================================================
@@ -28,43 +31,31 @@ public abstract class Inflatable<M extends Modelable> implements Bindable<M>, Vi
     ==============================================================================================*/
 
     public View getItemView() {
-        itemView.setOnClickListener(this);
-        itemView.setOnLongClickListener(this);
+        itemView.setOnClickListener(v -> listener.onItemClick(itemView, model, position));
+        itemView.setOnLongClickListener(v -> listener.onItemLongClick(itemView, model, position));
         onBindItemView();
         return itemView;
     }
 
-    public void bindModelable(@NonNull Modelable modelable, int position){
-        model = getModelFromModelable(modelable);
+    public void bindModelable(@NonNull Model model, int position){
+        this.model = clazz.cast(model);
         this.position = position;
-        if (model != null){
-            onBindModel();
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        listener.onItemClick(itemView, model, position);
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        return listener.onItemLongClick(itemView, model, position);
+        onBindModel();
     }
 
     /*==============================================================================================
     PROTECTED METHODS
     ==============================================================================================*/
 
-    protected boolean autoDelete(){
-        return listener.getModelableListable().delete(model);
+    protected final boolean autoDelete(){
+        return listener.getModelListable().delete(model);
     }
 
-    protected void notifyChanged(){
+    protected final void notifyChanged(){
         listener.getInflatableAdapter().notifyDataSetChanged();
     }
 
-    protected void makeToast(String line){
+    protected final void makeToast(String line){
         listener.onMakeToast(line);
     }
 }

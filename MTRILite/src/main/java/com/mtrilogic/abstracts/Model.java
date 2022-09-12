@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 @SuppressWarnings({"unused"})
-public abstract class Modelable implements Parcelable {
+public abstract class Model implements Parcelable {
     private static final String ITEM_ID = "itemId", VIEW_TYPE = "viewType", ENABLED = "enabled";
 
     private long itemId;
@@ -17,19 +17,23 @@ public abstract class Modelable implements Parcelable {
     PUBLIC CONSTRUCTORS
     ==============================================================================================*/
 
-    public Modelable(){}
+    public Model(){}
 
-    public Modelable(long itemId, int viewType, boolean enabled){
+    public Model(long itemId, int viewType, boolean enabled){
         this.itemId = itemId;
         this.viewType = viewType;
         this.enabled = enabled;
     }
 
+    public Model(long itemId, int viewType){
+        this(itemId, viewType, true);
+    }
+
     /*==============================================================================================
-    PROTECTED CONSTRUCTORS
+    PROTECTED CONSTRUCTOR
     ==============================================================================================*/
 
-    protected Modelable(Bundle data){
+    protected Model(Bundle data){
         if (data != null) {
             restoreFromData(data);
         }

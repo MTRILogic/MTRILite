@@ -6,23 +6,27 @@ import android.support.annotation.NonNull;
 import com.mtrilogic.classes.Listable;
 
 @SuppressWarnings("unused")
-public abstract class ListablePaginable extends Paginable {
-    private Listable<Modelable> modelableListable;
+public abstract class ListableModel<M extends Model> extends Model{
+    private Listable<M> listable;
 
     /*==============================================================================================
     PUBLIC CONSTRUCTORS
     ==============================================================================================*/
 
-    public ListablePaginable() {
+    public ListableModel() {
         super();
     }
 
-    public ListablePaginable(String pageTitle, String tagName, long itemId, int viewType) {
-        super(pageTitle, tagName, itemId, viewType);
-        modelableListable = new Listable<>();
+    public ListableModel(long itemId, int viewType, boolean enabled) {
+        super(itemId, viewType, enabled);
+        listable = new Listable<>();
     }
 
-    protected ListablePaginable(Bundle data) {
+    /*==============================================================================================
+    PROTECTED CONSTRUCTOR
+    ==============================================================================================*/
+
+    protected ListableModel(Bundle data) {
         super(data);
     }
 
@@ -30,12 +34,12 @@ public abstract class ListablePaginable extends Paginable {
     PUBLIC METHODS
     ==============================================================================================*/
 
-    public Listable<Modelable> getModelableListable() {
-        return modelableListable;
+    public final Listable<M> getListable() {
+        return listable;
     }
 
-    public void setModelableListable(Listable<Modelable> modelableListable) {
-        this.modelableListable = modelableListable;
+    public final void setListable(Listable<M> listable) {
+        this.listable = listable;
     }
 
     /*==============================================================================================
@@ -45,12 +49,12 @@ public abstract class ListablePaginable extends Paginable {
     @Override
     protected void restoreFromData(@NonNull Bundle data) {
         super.restoreFromData(data);
-        modelableListable = new Listable<>(data);
+        listable = new Listable<>(data);
     }
 
     @Override
     protected void saveToData(@NonNull Bundle data) {
         super.saveToData(data);
-        modelableListable.saveToData(data);
+        listable.saveToData(data);
     }
 }

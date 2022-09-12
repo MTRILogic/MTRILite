@@ -8,55 +8,59 @@ import com.mtrilogic.interfaces.ExpandableItemListener;
 import com.mtrilogic.interfaces.Observable;
 
 @SuppressWarnings("unused")
-public abstract class ExpandableGroup<M extends Modelable> extends Expandable<M> {
+public abstract class ExpandableGroup<M extends Model> extends Expandable<M> {
     protected boolean expanded;
 
     /*==============================================================================================
     PUBLIC CONSTRUCTOR
     ==============================================================================================*/
 
-    public ExpandableGroup(@NonNull View itemView, @NonNull ExpandableItemListener listener){
-        super(itemView, listener);
+    public ExpandableGroup(@NonNull Class<M> clazz, @NonNull View itemView, @NonNull ExpandableItemListener listener){
+        super(clazz, itemView, listener);
     }
 
     /*==============================================================================================
-    PUBLIC METHODS
+    PUBLIC METHOD
     ==============================================================================================*/
 
-    public void bindModelable(@NonNull Modelable modelable, int groupPosition, boolean expanded){
-        model = getModelFromModelable(modelable);
-        this.groupPosition = groupPosition;
+    @NonNull
+    @Override
+    public View getItemView() {
+        itemView.setOnClickListener(v -> listener.onExpandableGroupClick(itemView, model, groupPosition, expanded));
+        itemView.setOnLongClickListener(v -> listener.onExpandableGroupLongClick(itemView, model, groupPosition, expanded));
+        return super.getItemView();
+    }
+
+    public void bindModelable(@NonNull Model model, int groupPosition, boolean expanded){
         this.expanded = expanded;
-        if (model != null){
-            onBindModel();
-        }
+        super.bindModel(model, groupPosition);
     }
 
     /*==============================================================================================
     PROTECTED METHODS
     ==============================================================================================*/
 
-    protected boolean autoDelete(){
-        return listener.getModelableMapable().deleteGroup(model);
+    protected final boolean autoDelete(){
+        return listener.getModelMappable().deleteGroup(model);
     }
 
-    protected boolean addChild(@NonNull Modelable child){
-        return listener.getModelableMapable().appendChild(model, child);
+    protected final boolean addChild(@NonNull Model child){
+        return listener.getModelMappable().appendChild(model, child);
     }
 
-    protected long getChildIdx(){
-        return listener.getModelableMapable().getChildIdx(model);
+    protected final long getChildIdx(){
+        return listener.getModelMappable().getChildIdx(model);
     }
 
-    protected void setChildIdx(long idx){
-        listener.getModelableMapable().setChildIdx(model, idx);
+    protected final void setChildIdx(long idx){
+        listener.getModelMappable().setChildIdx(model, idx);
     }
 
-    protected void detachChildList(@NonNull Observable observable){
-        listener.getModelableMapable().detachChildList(model, observable);
+    protected final void detachChildList(@NonNull Observable observable){
+        listener.getModelMappable().detachChildList(model, observable);
     }
 
-    protected void autoExpanded(){
+    protected final void autoExpanded(){
         ExpandableListView lvwItems = listener.getExpandableListView();
         if (!lvwItems.isGroupExpanded(groupPosition)){
             lvwItems.expandGroup(groupPosition, true);

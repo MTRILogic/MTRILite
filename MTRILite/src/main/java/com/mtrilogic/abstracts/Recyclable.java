@@ -4,12 +4,15 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.mtrilogic.interfaces.Bindable;
+import com.mtrilogic.adapters.RecyclableAdapter;
+import com.mtrilogic.interfaces.ModelBindable;
 import com.mtrilogic.interfaces.RecyclableItemListener;
 
-@SuppressWarnings({"unused"})
-public abstract class Recyclable<M extends Modelable> extends RecyclerView.ViewHolder implements Bindable<M>, View.OnLongClickListener, View.OnClickListener {
+@SuppressWarnings("unused")
+public abstract class Recyclable<M extends Model> extends RecyclerView.ViewHolder implements ModelBindable {
     protected final RecyclableItemListener listener;
+
+    private final Class<M> clazz;
 
     protected int position;
     protected M model;
@@ -18,64 +21,79 @@ public abstract class Recyclable<M extends Modelable> extends RecyclerView.ViewH
     PUBLIC CONSTRUCTOR
     ==============================================================================================*/
 
-    public Recyclable(@NonNull View itemView, @NonNull RecyclableItemListener listener){
+    public Recyclable(@NonNull Class<M> clazz, @NonNull View itemView, @NonNull RecyclableItemListener listener) {
         super(itemView);
         this.listener = listener;
+        this.clazz = clazz;
     }
 
     /*==============================================================================================
     PUBLIC METHODS
     ==============================================================================================*/
 
-    public final void bindItemView(){
-        itemView.setOnLongClickListener(this);
-        itemView.setOnClickListener(this);
+    public void bindItemView(){
+        itemView.setOnClickListener(v -> listener.onRecyclableClick(itemView, model, position));
+        itemView.setOnLongClickListener(v -> listener.onRecyclableLongClick(itemView, model, position));
         onBindItemView();
     }
 
-    public final void bindModel(@NonNull Modelable modelable, int position){
-        model = getModelFromModelable(modelable);
+    public void bindModel(@NonNull Model model, int position){
+        this.model = clazz.cast(model);
         this.position = position;
-        if (model != null) {
-            onBindModel();
-        }
-    }
-
-    /*==============================================================================================
-    PUBLIC OVERRIDE METHODS
-    ==============================================================================================*/
-
-    @Override
-    public void onClick(View v) {
-        listener.onItemClick(itemView, model, position);
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        return listener.onItemLongClick(itemView, model, position);
+        onBindModel();
     }
 
     /*==============================================================================================
     PROTECTED METHODS
     ==============================================================================================*/
 
-    protected boolean autoDelete(){
-        return listener.getModelableListable().delete(model);
+    protected final boolean autoDelete(){
+        return listener.getModelListable().delete(model);
     }
 
-    protected void notifyChanged(int position){
-        listener.getRecyclableAdapter().notifyItemChanged(position);
+    protected final void notifyChanged(){
+        notifyItem(RecyclerView.Adapter::notifyItemChanged, RecyclerView.Adapter::notifyItemRangeChanged);
     }
 
-    protected void notifyDelete(int position){
-        listener.getRecyclableAdapter().notifyItemRemoved(position);
+    protected final void notifyInserted(){
+        notifyItem(RecyclerView.Adapter::notifyItemInserted, RecyclerView.Adapter::notifyItemRangeInserted);
     }
 
-    protected void notifyInsert(int position){
-        listener.getRecyclableAdapter().notifyItemInserted(position);
+    protected final void notifyDeleted(){
+        notifyItem(RecyclerView.Adapter::notifyItemRemoved, RecyclerView.Adapter::notifyItemRangeRemoved);
     }
 
-    protected void makeToast(String line){
+    protected final void notifyMoved(int fromPosition, int toPosition){
+        listener.getRecyclableAdapter().notifyItemMoved(fromPosition, toPosition);
+    }
+
+    protected final void makeToast(String line){
         listener.onMakeToast(line);
+    }
+
+    /*==============================================================================================
+    PRIVATE METHOD
+    ==============================================================================================*/
+
+    private void notifyItem(OnNotifyItemListener itemListener, OnNotifyItemRangeListener itemRangeListener){
+        RecyclableAdapter adapter = listener.getRecyclableAdapter();
+        int position = getAdapterPosition();
+        itemListener.onNotifyItem(adapter, position);
+        int count = listener.getModelListable().getCount();
+        if (count > position) {
+            itemRangeListener.onNotifyItemRange(adapter, position, count - position);
+        }
+    }
+
+    /*==============================================================================================
+    PRIVATE INTERFACES
+    ==============================================================================================*/
+
+    private interface OnNotifyItemListener{
+        void onNotifyItem(RecyclableAdapter adapter, int position);
+    }
+
+    private interface  OnNotifyItemRangeListener{
+        void onNotifyItemRange(RecyclableAdapter adapter, int position, int count);
     }
 }
