@@ -1,7 +1,5 @@
 package com.mtrilogic.abstracts;
 
-import static com.mtrilogic.classes.Base.makeLog;
-
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,27 +24,18 @@ public abstract class RecyclableFragment<P extends ListablePage<Model>> extends 
     @NonNull
     @Override
     public final Listable<Model> getModelListable() {
-        if (page == null){
-            makeLog("RecyclableFragment: ListablePage is null");
-        }
         return page.getListable();
     }
 
     @NonNull
     @Override
     public final RecyclableAdapter getRecyclableAdapter() {
-        if (adapter == null){
-            makeLog("RecyclableFragment: RecyclableAdapter is null");
-        }
         return adapter;
     }
 
     @NonNull
     @Override
     public final RecyclerView getRecyclerView() {
-        if (lvwItems == null){
-            makeLog("RecyclableFragment: RecyclerView is null");
-        }
         return lvwItems;
     }
 
@@ -58,13 +47,12 @@ public abstract class RecyclableFragment<P extends ListablePage<Model>> extends 
 
     @Override
     public boolean onRecyclableLongClick(@NonNull View itemView, @NonNull Model model, int position) {
-        makeLog("Item long click: Id = " + model.getItemId() + ", Pos = " + position);
-        return true;
+        return false;
     }
 
     @Override
     public void onRecyclableClick(@NonNull View itemView, @NonNull Model model, int position) {
-        makeLog("Item click: Id = " + model.getItemId() + ", Pos = " + position);
+
     }
 
     /*==============================================================================================

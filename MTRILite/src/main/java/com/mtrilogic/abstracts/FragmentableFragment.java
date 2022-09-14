@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 
 import com.mtrilogic.adapters.FragmentableAdapter;
-import com.mtrilogic.classes.Base;
 import com.mtrilogic.classes.Listable;
 import com.mtrilogic.fragments.DefaultBaseFragment;
 import com.mtrilogic.interfaces.FragmentableAdapterListener;
@@ -23,27 +22,18 @@ public abstract class FragmentableFragment<P extends ListablePage<Page>> extends
     @NonNull
     @Override
     public final Listable<Page> getPageListable() {
-        if (page == null){
-            Base.makeLog("FragmentableFragment: Page is null");
-        }
         return page.getListable();
     }
 
     @NonNull
     @Override
     public final FragmentableAdapter getFragmentableAdapter() {
-        if (adapter == null){
-            Base.makeLog("FragmentableFragment: Adapter is null");
-        }
         return adapter;
     }
 
     @NonNull
     @Override
     public final ViewPager getViewPager() {
-        if (pager == null){
-            Base.makeLog("FragmentableFragment: ViewPager is null");
-        }
         return pager;
     }
 
@@ -55,7 +45,7 @@ public abstract class FragmentableFragment<P extends ListablePage<Page>> extends
 
     @Override
     public void onPositionChanged(int position) {
-        Base.makeLog("FragmentableFragment: Position = " + position);
+
     }
 
     @Override

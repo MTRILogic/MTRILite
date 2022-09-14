@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mtrilogic.adapters.RecyclableAdapter;
-import com.mtrilogic.classes.Base;
 import com.mtrilogic.classes.Listable;
 import com.mtrilogic.interfaces.OnTaskCompleteListener;
 import com.mtrilogic.interfaces.RecyclableAdapterListener;
@@ -49,18 +48,12 @@ public abstract class RecyclableDialog<M extends Model> extends BaseDialog<M> im
     @NonNull
     @Override
     public final RecyclableAdapter getRecyclableAdapter() {
-        if (adapter == null){
-            Base.makeLog("RecyclableDialog: RecyclableAdapter is null");
-        }
         return adapter;
     }
 
     @NonNull
     @Override
     public final RecyclerView getRecyclerView() {
-        if (lvwItems == null){
-            Base.makeLog("RecyclableDialog: RecyclerView is null");
-        }
         return lvwItems;
     }
 

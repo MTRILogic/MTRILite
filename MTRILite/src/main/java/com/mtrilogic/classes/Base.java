@@ -2,7 +2,6 @@ package com.mtrilogic.classes;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -36,9 +35,5 @@ public final class Base{
             state.putInt(INDEX, index);
             state.putInt(TOP, top);
         }
-    }
-
-    public static void makeLog(String line){
-        Log.d(TAG, "LOG: " + line);
     }
 }

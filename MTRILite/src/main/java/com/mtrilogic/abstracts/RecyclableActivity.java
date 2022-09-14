@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mtrilogic.adapters.RecyclableAdapter;
-import com.mtrilogic.classes.Base;
 import com.mtrilogic.classes.Listable;
 import com.mtrilogic.interfaces.RecyclableAdapterListener;
 import com.mtrilogic.interfaces.RecyclableItemListener;
@@ -54,18 +53,12 @@ public abstract class RecyclableActivity extends BaseActivity implements Recycla
     @NonNull
     @Override
     public final RecyclableAdapter getRecyclableAdapter() {
-        if (adapter == null){
-            Base.makeLog("RecyclableActivity: RecyclableAdapter is null");
-        }
         return adapter;
     }
 
     @NonNull
     @Override
     public final RecyclerView getRecyclerView() {
-        if (lvwItems == null){
-            Base.makeLog("RecyclableActivity: RecyclerView is null");
-        }
         return lvwItems;
     }
 

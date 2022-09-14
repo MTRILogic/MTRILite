@@ -4,6 +4,11 @@ plugins {
     id 'com.android.library' version '7.2.2' apply false
 }
 
+// Workaround to disable java outdate compile warnings (13/9/22)
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-Xlint:-options'
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

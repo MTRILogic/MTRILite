@@ -5,14 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.mtrilogic.interfaces.Fragmentable;
 import com.mtrilogic.interfaces.FragmentableItemListener;
 import com.mtrilogic.interfaces.FragmentableListener;
-import com.mtrilogic.mtrilite.R;
 
 @SuppressWarnings({"unused","EmptyMethod"})
 public abstract class BaseFragment<P extends Page> extends Fragment implements Fragmentable {
@@ -73,12 +69,6 @@ public abstract class BaseFragment<P extends Page> extends Fragment implements F
                 listener.onNewTagName(tagName, tag);
             }
         }
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_default, container, false);
     }
 
     @Override

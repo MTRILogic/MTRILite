@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
 import com.mtrilogic.adapters.ExpandableAdapter;
-import com.mtrilogic.classes.Base;
 import com.mtrilogic.classes.Mappable;
 import com.mtrilogic.interfaces.ExpandableAdapterListener;
 import com.mtrilogic.interfaces.ExpandableItemListener;
@@ -26,27 +25,18 @@ public abstract class ExpandableDialogFragment<P extends MappablePage<Model>> ex
     @NonNull
     @Override
     public final Mappable<Model> getModelMappable() {
-        if (page == null){
-            Base.makeLog("ExpandableDialogFragment: MappablePage is null");
-        }
         return page.getMappable();
     }
 
     @NonNull
     @Override
     public final ExpandableAdapter getExpandableAdapter() {
-        if (adapter == null){
-            Base.makeLog("ExpandableDialogFragment: ExpandableAdapter is null");
-        }
         return adapter;
     }
 
     @NonNull
     @Override
     public final ExpandableListView getExpandableListView() {
-        if (lvwItems == null){
-            Base.makeLog("ExpandableDialogFragment: ExpandableListView is null");
-        }
         return lvwItems;
     }
 

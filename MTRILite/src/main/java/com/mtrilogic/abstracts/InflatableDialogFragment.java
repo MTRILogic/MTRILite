@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.mtrilogic.adapters.InflatableAdapter;
-import com.mtrilogic.classes.Base;
 import com.mtrilogic.classes.Listable;
 import com.mtrilogic.interfaces.InflatableAdapterListener;
 import com.mtrilogic.interfaces.InflatableItemListener;
@@ -25,27 +24,18 @@ public abstract class InflatableDialogFragment<P extends ListablePage<Model>> ex
     @NonNull
     @Override
     public final Listable<Model> getModelListable() {
-        if (page == null){
-            Base.makeLog("InflatableDialogFragment: ListablePage is null");
-        }
         return page.getListable();
     }
 
     @NonNull
     @Override
     public final InflatableAdapter getInflatableAdapter() {
-        if (adapter == null){
-            Base.makeLog("InflatableDialogFragment: InflatableAdapter is null");
-        }
         return adapter;
     }
 
     @NonNull
     @Override
     public final ListView getListView() {
-        if (lvwItems == null){
-            Base.makeLog("InflatableDialogFragment: ListView is null");
-        }
         return lvwItems;
     }
 
