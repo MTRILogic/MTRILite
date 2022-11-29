@@ -84,6 +84,7 @@ public abstract class BaseFragment<P extends Page> extends Fragment implements F
         super.onDetach();
     }
 
+    @NonNull
     @Override
     public final Page getPage() {
         return page;

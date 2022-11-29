@@ -96,6 +96,7 @@ public abstract class BaseDialogFragment<P extends Page> extends DialogFragment 
         return position;
     }
 
+    @NonNull
     @Override
     public final Page getPage() {
         return page;

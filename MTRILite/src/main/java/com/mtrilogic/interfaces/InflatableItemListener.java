@@ -1,7 +1,7 @@
 package com.mtrilogic.interfaces;
 
 import android.support.annotation.NonNull;
-import android.widget.ListView;
+import android.widget.AbsListView;
 
 import com.mtrilogic.abstracts.Model;
 import com.mtrilogic.adapters.InflatableAdapter;
@@ -16,5 +16,5 @@ public interface InflatableItemListener extends ItemListener, InflatableListener
     InflatableAdapter getInflatableAdapter();
 
     @NonNull
-    ListView getListView();
+    AbsListView getListView();
 }

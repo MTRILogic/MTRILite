@@ -16,21 +16,20 @@ import com.mtrilogic.interfaces.PaginableItemListener;
 import com.mtrilogic.items.DefaultPaginable;
 
 @SuppressWarnings("unused")
-public abstract class PaginableDialog<M extends Model> extends BaseDialog<M> implements PaginableAdapterListener, PaginableItemListener {
+public abstract class PaginableDialog<P extends Page> extends BaseDialog<P> implements PaginableAdapterListener, PaginableItemListener {
     protected final Listable<Page> pageListable;
     protected PaginableAdapter adapter;
-    protected ViewPager pager;
 
     /*==============================================================================================
     PUBLIC CONSTRUCTORS
     ==============================================================================================*/
 
-    public PaginableDialog(@NonNull Context context, @NonNull Listable<Page> pageListable, @NonNull OnTaskCompleteListener<M> listener) {
+    public PaginableDialog(@NonNull Context context, @NonNull Listable<Page> pageListable, @NonNull OnTaskCompleteListener<P> listener) {
         super(context, listener);
         this.pageListable = pageListable;
     }
 
-    protected PaginableDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener, @NonNull Listable<Page> pageListable, @NonNull OnTaskCompleteListener<M> listener) {
+    protected PaginableDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener, @NonNull Listable<Page> pageListable, @NonNull OnTaskCompleteListener<P> listener) {
         super(context, cancelable, cancelListener, listener);
         this.pageListable = pageListable;
     }
@@ -49,12 +48,6 @@ public abstract class PaginableDialog<M extends Model> extends BaseDialog<M> imp
     @Override
     public final PaginableAdapter getPaginableAdapter() {
         return adapter;
-    }
-
-    @NonNull
-    @Override
-    public final ViewPager getViewPager() {
-        return pager;
     }
 
     @NonNull
@@ -78,13 +71,12 @@ public abstract class PaginableDialog<M extends Model> extends BaseDialog<M> imp
     ==============================================================================================*/
 
     /**
-     * Inicializa el ViewPager y el PaginableAdapter
+     * Inicializa el PaginableAdapter
      * ATENCIÓN!!!: Este método debe llamarse dentro de onCreateView
      * @param pager el ViewPager.
      */
-    protected final void initViewPagerAdapter(@NonNull ViewPager pager){
+    protected final void initPaginableAdapter(@NonNull ViewPager pager){
         adapter = new PaginableAdapter(getLayoutInflater(), this);
         pager.setAdapter(adapter);
-        this.pager = pager;
     }
 }

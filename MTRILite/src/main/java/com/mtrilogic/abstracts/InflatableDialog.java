@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.AbsListView;
 
 import com.mtrilogic.adapters.InflatableAdapter;
 import com.mtrilogic.classes.Listable;
@@ -19,7 +19,6 @@ import com.mtrilogic.items.DefaultInflatable;
 public abstract class InflatableDialog<M extends Model> extends BaseDialog<M> implements InflatableAdapterListener, InflatableItemListener {
     protected final Listable<Model> modelListable;
     protected InflatableAdapter adapter;
-    protected ListView lvwItems;
 
     /*==============================================================================================
     PUBLIC CONSTRUCTORS
@@ -53,12 +52,6 @@ public abstract class InflatableDialog<M extends Model> extends BaseDialog<M> im
 
     @NonNull
     @Override
-    public final ListView getListView() {
-        return lvwItems;
-    }
-
-    @NonNull
-    @Override
     public Inflatable<? extends Model> getInflatable(int viewType, @NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
         return new DefaultInflatable(inflater, parent, this);
     }
@@ -78,14 +71,13 @@ public abstract class InflatableDialog<M extends Model> extends BaseDialog<M> im
     ==============================================================================================*/
 
     /**
-     * Inicializa el Listview y el InflatableAdapter
+     * Inicializa el InflatableAdapter
      * ATENCIÓN!!!: Este método debe llamarse dentro de onCreateView
      * @param lvwItems el ListView.
      * @param typeCount el número de items diferentes.
      */
-    protected final void initListViewAdapter(@NonNull ListView lvwItems, int typeCount){
+    protected final void initInflatableAdapter(@NonNull AbsListView lvwItems, int typeCount){
         adapter = new InflatableAdapter(getLayoutInflater(), typeCount, this);
         lvwItems.setAdapter(adapter);
-        this.lvwItems = lvwItems;
     }
 }

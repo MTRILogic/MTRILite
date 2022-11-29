@@ -72,6 +72,7 @@ public abstract class Paginable<P extends Page> implements PageBindable, Fragmen
         return position;
     }
 
+    @NonNull
     @Override
     public final Page getPage() {
         return page;

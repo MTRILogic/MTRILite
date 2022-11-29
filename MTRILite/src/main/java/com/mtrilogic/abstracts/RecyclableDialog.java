@@ -19,7 +19,6 @@ import com.mtrilogic.items.DefaultRecyclable;
 public abstract class RecyclableDialog<M extends Model> extends BaseDialog<M> implements RecyclableAdapterListener, RecyclableItemListener {
     protected final Listable<Model> modelListable;
     protected RecyclableAdapter adapter;
-    protected RecyclerView lvwItems;
 
     /*==============================================================================================
     PUBLIC CONSTRUCTORS
@@ -53,12 +52,6 @@ public abstract class RecyclableDialog<M extends Model> extends BaseDialog<M> im
 
     @NonNull
     @Override
-    public final RecyclerView getRecyclerView() {
-        return lvwItems;
-    }
-
-    @NonNull
-    @Override
     public Recyclable<? extends Model> getRecyclable(int viewType, @NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
         return new DefaultRecyclable(inflater, parent, this);
     }
@@ -78,15 +71,14 @@ public abstract class RecyclableDialog<M extends Model> extends BaseDialog<M> im
     ==============================================================================================*/
 
     /**
-     * Inicializa el RecyclerView y el RecyclableAdapter
+     * Inicializa el RecyclableAdapter
      * ATENCIÓN!!!: Este método debe llamarse dentro de onCreateView
      * @param lvwItems the recyclerView view.
      * @param manager the layout manager (LinearLayoutManager or GridLayoutManager)
      */
-    protected final void initRecyclerViewAdapter(@NonNull RecyclerView lvwItems, @NonNull RecyclerView.LayoutManager manager){
+    protected final void initRecyclableAdapter(@NonNull RecyclerView lvwItems, @NonNull RecyclerView.LayoutManager manager){
         adapter = new RecyclableAdapter(getLayoutInflater(), this);
         lvwItems.setAdapter(adapter);
         lvwItems.setLayoutManager(manager);
-        this.lvwItems = lvwItems;
     }
 }

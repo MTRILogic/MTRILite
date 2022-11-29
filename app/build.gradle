@@ -8,6 +8,8 @@ android {
     defaultConfig {
         applicationId "com.mtrilogic.mtriliteapp"
         minSdk 17
+
+        //noinspection ExpiredTargetSdkVersion
         targetSdk 25
         versionCode 1
         versionName "1.0"
@@ -26,6 +28,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+    namespace 'com.mtrilogic.mtriproject'
 }
 
 dependencies {
