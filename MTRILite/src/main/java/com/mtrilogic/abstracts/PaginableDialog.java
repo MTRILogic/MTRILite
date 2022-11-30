@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.mtrilogic.adapters.PaginableAdapter;
 import com.mtrilogic.classes.Listable;
-import com.mtrilogic.interfaces.OnTaskCompleteListener;
+import com.mtrilogic.interfaces.BaseDialogListener;
 import com.mtrilogic.interfaces.PaginableAdapterListener;
 import com.mtrilogic.interfaces.PaginableItemListener;
 import com.mtrilogic.items.DefaultPaginable;
@@ -24,12 +24,12 @@ public abstract class PaginableDialog<P extends Page> extends BaseDialog<P> impl
     PUBLIC CONSTRUCTORS
     ==============================================================================================*/
 
-    public PaginableDialog(@NonNull Context context, @NonNull Listable<Page> pageListable, @NonNull OnTaskCompleteListener<P> listener) {
+    public PaginableDialog(@NonNull Context context, @NonNull Listable<Page> pageListable, @NonNull BaseDialogListener<P> listener) {
         super(context, listener);
         this.pageListable = pageListable;
     }
 
-    protected PaginableDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener, @NonNull Listable<Page> pageListable, @NonNull OnTaskCompleteListener<P> listener) {
+    protected PaginableDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener, @NonNull Listable<Page> pageListable, @NonNull BaseDialogListener<P> listener) {
         super(context, cancelable, cancelListener, listener);
         this.pageListable = pageListable;
     }

@@ -10,9 +10,9 @@ import android.widget.AbsListView;
 
 import com.mtrilogic.adapters.InflatableAdapter;
 import com.mtrilogic.classes.Listable;
+import com.mtrilogic.interfaces.BaseDialogListener;
 import com.mtrilogic.interfaces.InflatableAdapterListener;
 import com.mtrilogic.interfaces.InflatableItemListener;
-import com.mtrilogic.interfaces.OnTaskCompleteListener;
 import com.mtrilogic.items.DefaultInflatable;
 
 @SuppressWarnings("unused")
@@ -24,12 +24,12 @@ public abstract class InflatableDialog<M extends Model> extends BaseDialog<M> im
     PUBLIC CONSTRUCTORS
     ==============================================================================================*/
 
-    public InflatableDialog(@NonNull Context context, @NonNull Listable<Model> modelListable, @NonNull OnTaskCompleteListener<M> listener) {
+    public InflatableDialog(@NonNull Context context, @NonNull Listable<Model> modelListable, @NonNull BaseDialogListener<M> listener) {
         super(context, listener);
         this.modelListable = modelListable;
     }
 
-    protected InflatableDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener, @NonNull Listable<Model> modelListable, @NonNull OnTaskCompleteListener<M> listener) {
+    protected InflatableDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener, @NonNull Listable<Model> modelListable, @NonNull BaseDialogListener<M> listener) {
         super(context, cancelable, cancelListener, listener);
         this.modelListable = modelListable;
     }

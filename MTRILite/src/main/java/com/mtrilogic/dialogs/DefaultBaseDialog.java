@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.mtrilogic.abstracts.BaseDialog;
-import com.mtrilogic.interfaces.OnTaskCompleteListener;
+import com.mtrilogic.interfaces.BaseDialogListener;
 import com.mtrilogic.models.DefaultModel;
 import com.mtrilogic.mtrilite.R;
 
@@ -17,11 +17,11 @@ public class DefaultBaseDialog extends BaseDialog<DefaultModel> {
     PUBLIC CONSTRUCTORS
     ==============================================================================================*/
 
-    public DefaultBaseDialog(@NonNull Context context, @NonNull OnTaskCompleteListener<DefaultModel> listener) {
+    public DefaultBaseDialog(@NonNull Context context, @NonNull BaseDialogListener<DefaultModel> listener) {
         super(context, listener);
     }
 
-    protected DefaultBaseDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener, @NonNull OnTaskCompleteListener<DefaultModel> listener) {
+    protected DefaultBaseDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener, @NonNull BaseDialogListener<DefaultModel> listener) {
         super(context, cancelable, cancelListener, listener);
     }
 

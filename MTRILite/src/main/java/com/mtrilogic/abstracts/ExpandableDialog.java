@@ -10,9 +10,9 @@ import android.widget.ExpandableListView;
 
 import com.mtrilogic.adapters.ExpandableAdapter;
 import com.mtrilogic.classes.Mappable;
+import com.mtrilogic.interfaces.BaseDialogListener;
 import com.mtrilogic.interfaces.ExpandableAdapterListener;
 import com.mtrilogic.interfaces.ExpandableItemListener;
-import com.mtrilogic.interfaces.OnTaskCompleteListener;
 import com.mtrilogic.items.DefaultExpandableChild;
 import com.mtrilogic.items.DefaultExpandableGroup;
 
@@ -25,12 +25,12 @@ public abstract class ExpandableDialog<M extends Model> extends BaseDialog<M> im
     PUBLIC CONSTRUCTORS
     ==============================================================================================*/
 
-    public ExpandableDialog(@NonNull Context context, @NonNull Mappable<Model> modelMappable, @NonNull OnTaskCompleteListener<M> listener) {
+    public ExpandableDialog(@NonNull Context context, @NonNull Mappable<Model> modelMappable, @NonNull BaseDialogListener<M> listener) {
         super(context, listener);
         this.modelMappable = modelMappable;
     }
 
-    protected ExpandableDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener, @NonNull Mappable<Model> modelMappable, @NonNull OnTaskCompleteListener<M> listener) {
+    protected ExpandableDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener, @NonNull Mappable<Model> modelMappable, @NonNull BaseDialogListener<M> listener) {
         super(context, cancelable, cancelListener, listener);
         this.modelMappable = modelMappable;
     }

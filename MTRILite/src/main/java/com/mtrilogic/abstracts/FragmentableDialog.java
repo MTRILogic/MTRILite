@@ -10,9 +10,9 @@ import android.support.v4.view.ViewPager;
 import com.mtrilogic.adapters.FragmentableAdapter;
 import com.mtrilogic.classes.Listable;
 import com.mtrilogic.fragments.DefaultBaseFragment;
+import com.mtrilogic.interfaces.BaseDialogListener;
 import com.mtrilogic.interfaces.FragmentableAdapterListener;
 import com.mtrilogic.interfaces.FragmentableItemListener;
-import com.mtrilogic.interfaces.OnTaskCompleteListener;
 
 @SuppressWarnings("unused")
 public abstract class FragmentableDialog<P extends Page> extends BaseDialog<P> implements FragmentableAdapterListener, FragmentableItemListener {
@@ -24,12 +24,12 @@ public abstract class FragmentableDialog<P extends Page> extends BaseDialog<P> i
     PUBLIC CONSTRUCTORS
     ==============================================================================================*/
 
-    public FragmentableDialog(@NonNull Context context, @NonNull Listable<Page> pageListable, @NonNull OnTaskCompleteListener<P> listener) {
+    public FragmentableDialog(@NonNull Context context, @NonNull Listable<Page> pageListable, @NonNull BaseDialogListener<P> listener) {
         super(context, listener);
         this.pageListable = pageListable;
     }
 
-    protected FragmentableDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener, @NonNull Listable<Page> pageListable, @NonNull OnTaskCompleteListener<P> listener) {
+    protected FragmentableDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener, @NonNull Listable<Page> pageListable, @NonNull BaseDialogListener<P> listener) {
         super(context, cancelable, cancelListener, listener);
         this.pageListable = pageListable;
     }

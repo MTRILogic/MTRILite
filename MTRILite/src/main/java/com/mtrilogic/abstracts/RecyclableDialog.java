@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.mtrilogic.adapters.RecyclableAdapter;
 import com.mtrilogic.classes.Listable;
-import com.mtrilogic.interfaces.OnTaskCompleteListener;
+import com.mtrilogic.interfaces.BaseDialogListener;
 import com.mtrilogic.interfaces.RecyclableAdapterListener;
 import com.mtrilogic.interfaces.RecyclableItemListener;
 import com.mtrilogic.items.DefaultRecyclable;
@@ -24,12 +24,12 @@ public abstract class RecyclableDialog<M extends Model> extends BaseDialog<M> im
     PUBLIC CONSTRUCTORS
     ==============================================================================================*/
 
-    public RecyclableDialog(@NonNull Context context, @NonNull Listable<Model> modelListable, @NonNull OnTaskCompleteListener<M> listener) {
+    public RecyclableDialog(@NonNull Context context, @NonNull Listable<Model> modelListable, @NonNull BaseDialogListener<M> listener) {
         super(context, listener);
         this.modelListable = modelListable;
     }
 
-    protected RecyclableDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener, @NonNull Listable<Model> modelListable, @NonNull OnTaskCompleteListener<M> listener) {
+    protected RecyclableDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener, @NonNull Listable<Model> modelListable, @NonNull BaseDialogListener<M> listener) {
         super(context, cancelable, cancelListener, listener);
         this.modelListable = modelListable;
     }
